@@ -549,6 +549,7 @@ bool
 FootstepPlanner::planService(humanoid_nav_msgs::PlanFootsteps::Request &req,
                              humanoid_nav_msgs::PlanFootsteps::Response &resp)
 {
+	ROS_INFO("plan_footsteps planService started...");
   bool result = plan(req.start.x, req.start.y, req.start.theta,
                      req.goal.x, req.goal.y, req.goal.theta);
 
@@ -559,6 +560,7 @@ FootstepPlanner::planService(humanoid_nav_msgs::PlanFootsteps::Request &req,
   extractFootstepsSrv(resp.footsteps);
 
   resp.result = result;
+  ROS_INFO("plan_footsteps planService end");
 
   // return true since service call was successful (independent from the
   // success of the planning call)
@@ -570,6 +572,8 @@ bool
 FootstepPlanner::planFeetService(humanoid_nav_msgs::PlanFootstepsBetweenFeet::Request &req,
                              humanoid_nav_msgs::PlanFootstepsBetweenFeet::Response &resp)
 {
+	//plan_footsteps_feet
+	ROS_INFO("plan_footsteps_feet planFeetService started...");
   // TODO check direction and change of states, force planning from scratch if does not fit
   setStart(State(req.start_left.pose.x, req.start_left.pose.y, req.start_left.pose.theta, LEFT),
            State(req.start_right.pose.x, req.start_right.pose.y, req.start_right.pose.theta, RIGHT));
@@ -585,6 +589,7 @@ FootstepPlanner::planFeetService(humanoid_nav_msgs::PlanFootstepsBetweenFeet::Re
   extractFootstepsSrv(resp.footsteps);
 
   resp.result = result;
+  ROS_INFO("plan_footsteps_feet planFeetService end");
 
   // return true since service call was successful (independent from the
   // success of the planning call)
