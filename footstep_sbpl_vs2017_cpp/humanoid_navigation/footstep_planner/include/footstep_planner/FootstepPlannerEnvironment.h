@@ -32,8 +32,8 @@
 
 #include <math.h>
 #include <vector>
-#include <tr1/unordered_set>
-#include <tr1/hashtable.h>
+#include <unordered_set>
+//#include <tr1/hashtable.h>
 
 
 namespace footstep_planner
@@ -78,14 +78,14 @@ public:
   struct IntPairHash{
   public:
     size_t operator()(std::pair<int, int> x) const throw() {
-      size_t seed = std::tr1::hash<int>()(x.first);
-      return std::tr1::hash<int>()(x.second) + 0x9e3779b9 + (seed<<6) + (seed>>2);
+      size_t seed = std::hash<int>()(x.first);
+      return std::hash<int>()(x.second) + 0x9e3779b9 + (seed<<6) + (seed>>2);
     }
   };
 
   typedef std::vector<int> exp_states_t;
   typedef exp_states_t::const_iterator exp_states_iter_t;
-  typedef std::tr1::unordered_set<std::pair<int,int>, IntPairHash > exp_states_2d_t;
+  typedef std::unordered_set<std::pair<int,int>, IntPairHash > exp_states_2d_t;
   typedef exp_states_2d_t::const_iterator exp_states_2d_iter_t;
 
   /**

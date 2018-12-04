@@ -39,8 +39,8 @@
 #include <tf/tf.h>
 #include <visualization_msgs/Marker.h>
 #include <visualization_msgs/MarkerArray.h>
-#include <XmlRpcValue.h>
-#include <XmlRpcException.h>
+//#include <XmlRpcValue.h>
+//#include <XmlRpcException.h>
 
 #include <assert.h>
 #include <time.h>

@@ -29,6 +29,7 @@
 #include <angles/angles.h>
 #include <tf/tf.h>
 
+#define _USE_MATH_DEFINES
 #include <math.h>
 
 

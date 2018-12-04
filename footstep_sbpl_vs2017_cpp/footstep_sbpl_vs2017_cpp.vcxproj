@@ -84,9 +84,12 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(ProjectDir)sbpl\src\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)humanoid_navigation\footstep_planner\include;$(ProjectDir)humanoid_navigation\gridmap_2d\include;$(ProjectDir)sbpl\src\include;C:\Program Files\boost\boost_1_68_0;C:\opencv\build\include;$(ProjectDir)ros\kinetic\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DisableSpecificWarnings>4996;%(DisableSpecificWarnings)</DisableSpecificWarnings>
     </ClCompile>
+    <Link>
+      <AdditionalLibraryDirectories>C:\opencv\build\x64\vc15\lib;C:\Program Files\boost\boost_1_68_0\lib64-msvc-14.1;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+    </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -117,6 +120,18 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="humanoid_navigation\footstep_planner\src\Footstep.cpp" />
+    <ClCompile Include="humanoid_navigation\footstep_planner\src\FootstepPlanner.cpp" />
+    <ClCompile Include="humanoid_navigation\footstep_planner\src\FootstepPlannerEnvironment.cpp" />
+    <ClCompile Include="humanoid_navigation\footstep_planner\src\FootstepPlannerNode.cpp" />
+    <ClCompile Include="humanoid_navigation\footstep_planner\src\footstep_planner.cpp" />
+    <ClCompile Include="humanoid_navigation\footstep_planner\src\helper.cpp" />
+    <ClCompile Include="humanoid_navigation\footstep_planner\src\Heuristic.cpp" />
+    <ClCompile Include="humanoid_navigation\footstep_planner\src\PathCostHeuristic.cpp" />
+    <ClCompile Include="humanoid_navigation\footstep_planner\src\PlanningState.cpp" />
+    <ClCompile Include="humanoid_navigation\footstep_planner\src\PlanningStateChangeQuery.cpp" />
+    <ClCompile Include="humanoid_navigation\footstep_planner\src\State.cpp" />
+    <ClCompile Include="humanoid_navigation\gridmap_2d\src\GridMap2D.cpp" />
     <ClCompile Include="sbpl\src\discrete_space_information\environment_nav2D.cpp" />
     <ClCompile Include="sbpl\src\discrete_space_information\environment_nav2Duu.cpp" />
     <ClCompile Include="sbpl\src\discrete_space_information\environment_navxythetalat.cpp" />
@@ -132,12 +147,22 @@
     <ClCompile Include="sbpl\src\planners\ppcpplanner.cpp" />
     <ClCompile Include="sbpl\src\planners\rstarplanner.cpp" />
     <ClCompile Include="sbpl\src\planners\viplanner.cpp" />
-    <ClCompile Include="sbpl\src\test\main.cpp" />
     <ClCompile Include="sbpl\src\utils\2Dgridsearch.cpp" />
     <ClCompile Include="sbpl\src\utils\config.cpp" />
     <ClCompile Include="sbpl\src\utils\heap.cpp" />
     <ClCompile Include="sbpl\src\utils\mdp.cpp" />
     <ClCompile Include="sbpl\src\utils\utils.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="humanoid_navigation\footstep_planner\config\footsteps_asimo.yaml" />
+    <None Include="humanoid_navigation\footstep_planner\config\planning_params.yaml" />
+    <None Include="humanoid_navigation\footstep_planner\config\planning_params_asimo.yaml" />
+    <None Include="humanoid_navigation\footstep_planner\config\rviz_footstep_planning.rviz" />
+    <None Include="humanoid_navigation\footstep_planner\launch\rviz_footstep_planning.launch" />
+    <None Include="humanoid_navigation\footstep_planner\maps\sample.yaml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="humanoid_navigation\footstep_planner\maps\sample.gif" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
