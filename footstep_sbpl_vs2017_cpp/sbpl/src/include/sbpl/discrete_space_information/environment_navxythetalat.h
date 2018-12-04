@@ -30,6 +30,7 @@
 #ifndef __ENVIRONMENT_NAVXYTHETALAT_H_
 #define __ENVIRONMENT_NAVXYTHETALAT_H_
 
+#include <algorithm>
 #include <cstdio>
 #include <vector>
 #include <sstream>

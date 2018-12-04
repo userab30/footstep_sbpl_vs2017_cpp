@@ -27,7 +27,8 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include <cmath>
+#define _USE_MATH_DEFINES
+#include <math.h>
 #include <cstring>
 #include <ctime>
 #include <sbpl/discrete_space_information/environment_navxythetalat.h>

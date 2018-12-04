@@ -84,6 +84,8 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>$(ProjectDir)sbpl\src\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <DisableSpecificWarnings>4996;%(DisableSpecificWarnings)</DisableSpecificWarnings>
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -115,6 +117,27 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="sbpl\src\discrete_space_information\environment_nav2D.cpp" />
+    <ClCompile Include="sbpl\src\discrete_space_information\environment_nav2Duu.cpp" />
+    <ClCompile Include="sbpl\src\discrete_space_information\environment_navxythetalat.cpp" />
+    <ClCompile Include="sbpl\src\discrete_space_information\environment_navxythetamlevlat.cpp" />
+    <ClCompile Include="sbpl\src\discrete_space_information\environment_robarm.cpp" />
+    <ClCompile Include="sbpl\src\discrete_space_information\environment_XXX.cpp" />
+    <ClCompile Include="sbpl\src\heuristics\embedded_heuristic.cpp" />
+    <ClCompile Include="sbpl\src\planners\adplanner.cpp" />
+    <ClCompile Include="sbpl\src\planners\ANAplanner.cpp" />
+    <ClCompile Include="sbpl\src\planners\araplanner.cpp" />
+    <ClCompile Include="sbpl\src\planners\lazyARA.cpp" />
+    <ClCompile Include="sbpl\src\planners\mhaplanner.cpp" />
+    <ClCompile Include="sbpl\src\planners\ppcpplanner.cpp" />
+    <ClCompile Include="sbpl\src\planners\rstarplanner.cpp" />
+    <ClCompile Include="sbpl\src\planners\viplanner.cpp" />
+    <ClCompile Include="sbpl\src\test\main.cpp" />
+    <ClCompile Include="sbpl\src\utils\2Dgridsearch.cpp" />
+    <ClCompile Include="sbpl\src\utils\config.cpp" />
+    <ClCompile Include="sbpl\src\utils\heap.cpp" />
+    <ClCompile Include="sbpl\src\utils\mdp.cpp" />
+    <ClCompile Include="sbpl\src\utils\utils.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

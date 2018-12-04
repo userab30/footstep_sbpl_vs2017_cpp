@@ -30,6 +30,7 @@
 #ifndef __LIST_H_
 #define __LIST_H_
 
+#include <algorithm>
 #include <cstdlib>
 #include <sstream>
 

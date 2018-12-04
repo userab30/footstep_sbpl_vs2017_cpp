@@ -14,4 +14,69 @@
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
   </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="sbpl\src\test\main.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="sbpl\src\discrete_space_information\environment_nav2D.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="sbpl\src\discrete_space_information\environment_nav2Duu.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="sbpl\src\discrete_space_information\environment_navxythetalat.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="sbpl\src\discrete_space_information\environment_navxythetamlevlat.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="sbpl\src\discrete_space_information\environment_robarm.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="sbpl\src\discrete_space_information\environment_XXX.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="sbpl\src\heuristics\embedded_heuristic.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="sbpl\src\planners\adplanner.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="sbpl\src\planners\ANAplanner.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="sbpl\src\planners\araplanner.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="sbpl\src\planners\lazyARA.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="sbpl\src\planners\mhaplanner.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="sbpl\src\planners\ppcpplanner.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="sbpl\src\planners\rstarplanner.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="sbpl\src\planners\viplanner.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="sbpl\src\utils\2Dgridsearch.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="sbpl\src\utils\config.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="sbpl\src\utils\heap.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="sbpl\src\utils\mdp.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="sbpl\src\utils\utils.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+  </ItemGroup>
 </Project>
