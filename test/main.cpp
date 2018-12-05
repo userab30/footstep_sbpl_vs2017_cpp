@@ -1,5 +1,7 @@
 #include <opencv2/opencv.hpp>
 #include <iostream>
+#include<opencv2/highgui.hpp>
+#include<opencv2/core/core.hpp>
 
 using namespace cv;
 using namespace std;
@@ -39,7 +41,8 @@ int main(int argc, char** argv)
 	string yamlPath = "..\\footstep_sbpl_vs2017_cpp\\humanoid_navigation\\footstep_planner\\config\\";
 	string fileName = "planning_params.yaml";
 
-	FileStorage fs(yamlPath+ fileName, FileStorage::READ);
+	FileStorage fs;
+	fs.open(yamlPath + fileName, FileStorage::READ);
 	if (!fs.isOpened())
 	{
 		cout << "No file!" << endl;
@@ -49,7 +52,7 @@ int main(int argc, char** argv)
 	envParams.heuristic_type = fs["heuristic_type"];
 	envParams.planner_type = fs["planner_type"];
 	envParams.search_until_first_solution = (string)fs["search_until_first_solution"] == "True";
-
+	cout<<envParams.planner_type;
 
 	fs.release();
 	return 0;
