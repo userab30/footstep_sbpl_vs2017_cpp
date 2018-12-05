@@ -1,7 +1,5 @@
 #include <opencv2/opencv.hpp>
 #include <iostream>
-#include<opencv2/highgui.hpp>
-#include<opencv2/core/core.hpp>
 
 using namespace cv;
 using namespace std;
@@ -42,7 +40,7 @@ int main(int argc, char** argv)
 	string fileName = "planning_params.yaml";
 
 	FileStorage fs;
-	fs.open(yamlPath + fileName, FileStorage::READ);
+	bool opened = fs.open(yamlPath + fileName, FileStorage::READ);
 	if (!fs.isOpened())
 	{
 		cout << "No file!" << endl;
@@ -51,7 +49,7 @@ int main(int argc, char** argv)
 	environment_params envParams;
 	envParams.heuristic_type = fs["heuristic_type"];
 	envParams.planner_type = fs["planner_type"];
-	envParams.search_until_first_solution = (string)fs["search_until_first_solution"] == "True";
+	envParams.search_until_first_solution = fs["search_until_first_solution"] == "True";
 	cout<<envParams.planner_type;
 
 	fs.release();
