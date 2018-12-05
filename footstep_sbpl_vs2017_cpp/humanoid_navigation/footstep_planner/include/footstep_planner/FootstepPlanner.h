@@ -287,8 +287,8 @@ protected:
   ros::Publisher  ivHeuristicPathVisPub;
   ros::Publisher  ivPathVisPub;
   ros::Publisher  ivStartPoseVisPub;
-  ros::ServiceServer ivFootstepPlanService;
-  ros::ServiceServer ivFootstepPlanFeetService;
+  //ros::ServiceServer ivFootstepPlanService;
+  //ros::ServiceServer ivFootstepPlanFeetService;
 
   double ivFootSeparation;
   double ivMaxStepWidth;
