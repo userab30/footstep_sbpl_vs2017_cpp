@@ -46,8 +46,7 @@ FootstepPlanner::FootstepPlanner()
       sensor_msgs::PointCloud>("random_states", 1);
   ivFootstepPathVisPub = nh_private.advertise<
       visualization_msgs::MarkerArray>("footsteps_array", 1);
-  ivHeuristicPathVisPub = nh_private.advertise<
-      nav_msgs::Path>("heuristic_path", 1);
+  //ivHeuristicPathVisPub = nh_private.advertise<nav_msgs::Path>("heuristic_path", 1);
   ivPathVisPub = nh_private.advertise<nav_msgs::Path>("path", 1);
   ivStartPoseVisPub = nh_private.advertise<
       geometry_msgs::PoseStamped>("start", 1);
@@ -976,6 +975,7 @@ FootstepPlanner::clearFootstepPathVis(unsigned num_footsteps)
   }
 
   ivFootstepPathVisPub.publish(marker_msg);
+  ROS_INFO("clearFootstepPathVis called");
 }
 
 
@@ -1005,8 +1005,9 @@ FootstepPlanner::broadcastExpandedNodesVis()
     cloud_msg.header.frame_id = ivMapPtr->getFrameID();
 
     cloud_msg.points = points;
-
+	
     ivExpandedStatesVisPub.publish(cloud_msg);
+	ROS_INFO("broadcastExpandedNodesVis called");
   }
 }
 
@@ -1052,6 +1053,7 @@ FootstepPlanner::broadcastFootstepPathVis()
   ivLastMarkerMsgSize = markers.size();
 
   ivFootstepPathVisPub.publish(broadcast_msg);
+  ROS_INFO("broadcastFootstepPathVis called");
 }
 
 
@@ -1093,6 +1095,7 @@ FootstepPlanner::broadcastRandomNodesVis()
     cloud_msg.points = points;
 
     ivRandomStatesVisPub.publish(cloud_msg);
+	ROS_INFO("broadcastRandomNodesVis called");
   }
 }
 
@@ -1122,6 +1125,7 @@ FootstepPlanner::broadcastPathVis()
 
   path_msg.header = state.header;
   ivPathVisPub.publish(path_msg);
+  ROS_INFO("broadcastPathVis called");
 }
 
 

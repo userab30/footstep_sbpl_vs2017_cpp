@@ -283,8 +283,8 @@ protected:
   ros::Publisher  ivExpandedStatesVisPub;
   ros::Publisher  ivFootstepPathVisPub;
   ros::Publisher  ivRandomStatesVisPub;
-  ros::Subscriber ivGridMapSub;
-  ros::Publisher  ivHeuristicPathVisPub;
+  //ros::Subscriber ivGridMapSub;
+  //ros::Publisher  ivHeuristicPathVisPub;
   ros::Publisher  ivPathVisPub;
   ros::Publisher  ivStartPoseVisPub;
   //ros::ServiceServer ivFootstepPlanService;
