@@ -1,0 +1,15 @@
+[ INFO] [1543963932.250037328]: FootstepPlanner heuristic: 2D path euclidean distance with step costs
+[ INFO] [1543963932.259616297]: Planning with ARAPlanner
+[ INFO] [1543963932.268764839]: Search direction: backward planning
+[ INFO] [1543963932.595847896]: GridMap2D created with 400 x 400 cells at 0.010000 resolution.
+[ INFO] [1544008740.196788472]: Start pose set to (0.994820 1.011290 1.570796)
+
+[ INFO] [1544008751.887646093]: Goal pose set to (2.002816 1.999522 0.000000)
+[ INFO] [1544008751.887870410]: Resetting planner
+[ INFO] [1544008752.702319314]: Updating the heuristic values.
+[ INFO] [1544008752.711227635]: Start planning (max time: 7.000000, initial eps: 8.000000 (8.000000))
+
+[ INFO] [1544008753.384829276]: Solution of size 9 found after 0.660999 s
+[ INFO] [1544008753.395884540]: Expanded states: 2970 total / 2963 new
+[ INFO] [1544008753.400853307]: Final eps: 1.000000
+[ INFO] [1544008753.404294464]: Path cost: 2.659000 (2659)
