@@ -33,16 +33,30 @@ struct environment_params
 int getFileParam(environment_params &ivEnvironmentParams, std::string yamlPath, std::string fileName)
 {
 
+<<<<<<< HEAD
 	std::string heuristic_type;
 	double diff_angle_cost;
 
 	cv::FileStorage fs_param;
 	fs_param.open(yamlPath + fileName, cv::FileStorage::READ);
 	if (!fs_param.isOpened())
+=======
+	FileStorage fs;
+	bool opened = fs.open(yamlPath + fileName, FileStorage::READ);
+	if (!fs.isOpened())
+>>>>>>> c1d82b618d79d8a624021056f7ecd5029f66c2b7
 	{
 		std::cout << fileName << ": No file!" << std::endl;
 		return -1;
 	}
+<<<<<<< HEAD
+=======
+	environment_params envParams;
+	envParams.heuristic_type = fs["heuristic_type"];
+	envParams.planner_type = fs["planner_type"];
+	envParams.search_until_first_solution = fs["search_until_first_solution"] == "True";
+	cout<<envParams.planner_type;
+>>>>>>> c1d82b618d79d8a624021056f7ecd5029f66c2b7
 
 
 	heuristic_type = fs_param["heuristic_type"];
