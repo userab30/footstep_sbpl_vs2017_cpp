@@ -48,7 +48,7 @@ public:
     ivStartPoseSub = ivNh.subscribe<geometry_msgs::PoseWithCovarianceStamped>("initialpose", 1, &FootstepPlanner::startPoseCallback, &ivFootstepPlanner);
 
     // service:
-    ivFootstepPlanService = ivNh.advertiseService("plan_footsteps", &FootstepPlanner::planService, &ivFootstepPlanner);
+    //ivFootstepPlanService = ivNh.advertiseService("plan_footsteps", &FootstepPlanner::planService, &ivFootstepPlanner);
   }
 
   virtual ~FootstepPlannerWallsNode(){}

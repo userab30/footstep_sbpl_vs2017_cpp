@@ -545,82 +545,78 @@ FootstepPlanner::plan(float start_x, float start_y, float start_theta,
 }
 
 
-bool
-FootstepPlanner::planService(humanoid_nav_msgs::PlanFootsteps::Request &req,
-                             humanoid_nav_msgs::PlanFootsteps::Response &resp)
-{
-	ROS_INFO("plan_footsteps planService started...");
-  bool result = plan(req.start.x, req.start.y, req.start.theta,
-                     req.goal.x, req.goal.y, req.goal.theta);
-
-  resp.costs = getPathCosts();
-  resp.footsteps.reserve(getPathSize());
-  resp.final_eps = ivPlannerPtr->get_final_epsilon();
-  resp.expanded_states = ivPlannerEnvironmentPtr->getNumExpandedStates();
-  extractFootstepsSrv(resp.footsteps);
-
-  resp.result = result;
-  ROS_INFO("plan_footsteps planService end");
-
-  // return true since service call was successful (independent from the
-  // success of the planning call)
-  return true;
-}
+//bool
+//FootstepPlanner::planService(humanoid_nav_msgs::PlanFootsteps::Request &req,
+//                             humanoid_nav_msgs::PlanFootsteps::Response &resp)
+//{
+//  bool result = plan(req.start.x, req.start.y, req.start.theta,
+//                     req.goal.x, req.goal.y, req.goal.theta);
+//
+//  resp.costs = getPathCosts();
+//  resp.footsteps.reserve(getPathSize());
+//  resp.final_eps = ivPlannerPtr->get_final_epsilon();
+//  resp.expanded_states = ivPlannerEnvironmentPtr->getNumExpandedStates();
+//  extractFootstepsSrv(resp.footsteps);
+//
+//  resp.result = result;
+//
+//  // return true since service call was successful (independent from the
+//  // success of the planning call)
+//  return true;
+//}
 
 
-bool
-FootstepPlanner::planFeetService(humanoid_nav_msgs::PlanFootstepsBetweenFeet::Request &req,
-                             humanoid_nav_msgs::PlanFootstepsBetweenFeet::Response &resp)
-{
-	//plan_footsteps_feet
-	ROS_INFO("plan_footsteps_feet planFeetService started...");
-  // TODO check direction and change of states, force planning from scratch if does not fit
-  setStart(State(req.start_left.pose.x, req.start_left.pose.y, req.start_left.pose.theta, LEFT),
-           State(req.start_right.pose.x, req.start_right.pose.y, req.start_right.pose.theta, RIGHT));
-  setGoal(State(req.goal_left.pose.x, req.goal_left.pose.y, req.goal_left.pose.theta, LEFT),
-           State(req.goal_right.pose.x, req.goal_right.pose.y, req.goal_right.pose.theta, RIGHT));
+//bool
+//FootstepPlanner::planFeetService(humanoid_nav_msgs::PlanFootstepsBetweenFeet::Request &req,
+//                             humanoid_nav_msgs::PlanFootstepsBetweenFeet::Response &resp)
+//{
+//	//plan_footsteps_feet
+//  // TODO check direction and change of states, force planning from scratch if does not fit
+//  setStart(State(req.start_left.pose.x, req.start_left.pose.y, req.start_left.pose.theta, LEFT),
+//           State(req.start_right.pose.x, req.start_right.pose.y, req.start_right.pose.theta, RIGHT));
+//  setGoal(State(req.goal_left.pose.x, req.goal_left.pose.y, req.goal_left.pose.theta, LEFT),
+//           State(req.goal_right.pose.x, req.goal_right.pose.y, req.goal_right.pose.theta, RIGHT));
+//
+//  bool result = plan(false);
+//
+//  resp.costs = getPathCosts();
+//  resp.footsteps.reserve(getPathSize());
+//  resp.final_eps = ivPlannerPtr->get_final_epsilon();
+//  resp.expanded_states = ivPlannerEnvironmentPtr->getNumExpandedStates();
+//  extractFootstepsSrv(resp.footsteps);
+//
+//  resp.result = result;
+//
+//  // return true since service call was successful (independent from the
+//  // success of the planning call)
+//  return true;
+//}
 
-  bool result = plan(false);
-
-  resp.costs = getPathCosts();
-  resp.footsteps.reserve(getPathSize());
-  resp.final_eps = ivPlannerPtr->get_final_epsilon();
-  resp.expanded_states = ivPlannerEnvironmentPtr->getNumExpandedStates();
-  extractFootstepsSrv(resp.footsteps);
-
-  resp.result = result;
-  ROS_INFO("plan_footsteps_feet planFeetService end");
-
-  // return true since service call was successful (independent from the
-  // success of the planning call)
-  return true;
-}
-
-void
-FootstepPlanner::extractFootstepsSrv(std::vector<humanoid_nav_msgs::StepTarget> & footsteps) const{
-  humanoid_nav_msgs::StepTarget foot;
-  state_iter_t path_iter;
-  for (path_iter = getPathBegin(); path_iter != getPathEnd(); ++path_iter)
-  {
-    foot.pose.x = path_iter->getX();
-    foot.pose.y = path_iter->getY();
-    foot.pose.theta = path_iter->getTheta();
-    if (path_iter->getLeg() == LEFT)
-      foot.leg = humanoid_nav_msgs::StepTarget::left;
-    else if (path_iter->getLeg() == RIGHT)
-      foot.leg = humanoid_nav_msgs::StepTarget::right;
-    else
-    {
-      ROS_ERROR("Footstep pose at (%f, %f, %f) is set to NOLEG!",
-                path_iter->getX(), path_iter->getY(),
-                path_iter->getTheta());
-      continue;
-    }
-
-    footsteps.push_back(foot);
-  }
-
-}
+//void
+//FootstepPlanner::extractFootstepsSrv(std::vector<humanoid_nav_msgs::StepTarget> & footsteps) const{
+//  humanoid_nav_msgs::StepTarget foot;
+//  state_iter_t path_iter;
+//  for (path_iter = getPathBegin(); path_iter != getPathEnd(); ++path_iter)
+//  {
+//    foot.pose.x = path_iter->getX();
+//    foot.pose.y = path_iter->getY();
+//    foot.pose.theta = path_iter->getTheta();
+//    if (path_iter->getLeg() == LEFT)
+//      foot.leg = humanoid_nav_msgs::StepTarget::left;
+//    else if (path_iter->getLeg() == RIGHT)
+//      foot.leg = humanoid_nav_msgs::StepTarget::right;
+//    else
+//    {
+//      ROS_ERROR("Footstep pose at (%f, %f, %f) is set to NOLEG!",
+//                path_iter->getX(), path_iter->getY(),
+//                path_iter->getTheta());
+//      continue;
+//    }
+//
+//    footsteps.push_back(foot);
+//  }
+//
+//}
 
 
 void

@@ -87,12 +87,12 @@ public:
   bool replan();
 
   /// @brief Service handle to plan footsteps.
-  bool planService(humanoid_nav_msgs::PlanFootsteps::Request &req,
-                   humanoid_nav_msgs::PlanFootsteps::Response &resp);
+  //bool planService(humanoid_nav_msgs::PlanFootsteps::Request &req,
+  //                 humanoid_nav_msgs::PlanFootsteps::Response &resp);
 
   /// @brief Service handle to plan footsteps.
-  bool planFeetService(humanoid_nav_msgs::PlanFootstepsBetweenFeet::Request &req,
-                   humanoid_nav_msgs::PlanFootstepsBetweenFeet::Response &resp);
+  //bool planFeetService(humanoid_nav_msgs::PlanFootstepsBetweenFeet::Request &req,
+  //                 humanoid_nav_msgs::PlanFootstepsBetweenFeet::Response &resp);
 
   /**
    * @brief Sets the goal pose as two feet (left / right)
@@ -232,7 +232,7 @@ protected:
   void broadcastPathVis();
 
   /// helper to create service response
-  void extractFootstepsSrv(std::vector<humanoid_nav_msgs::StepTarget> & footsteps) const;
+  //void extractFootstepsSrv(std::vector<humanoid_nav_msgs::StepTarget> & footsteps) const;
 
   /**
    * @return True if the newly calculated path is different from the existing
