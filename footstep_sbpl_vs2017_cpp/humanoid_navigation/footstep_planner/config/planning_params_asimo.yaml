@@ -1,3 +1,5 @@
+%YAML:1.0
+---
 ### Planning parameterization for a large humanoid, similar to ASIMO or HRP-2 ##
 
 # cost to perform one footstep (in addition to distance costs, corresponds to 'meters')
