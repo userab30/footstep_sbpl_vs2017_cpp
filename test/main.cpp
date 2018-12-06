@@ -159,6 +159,8 @@ int main(int argc, char** argv)
 
 
 
+
+
 	std::cout << "gridMap.m_mapInfo.height: " << gridMap.m_mapInfo.height << std::endl;
 
 	return 0;

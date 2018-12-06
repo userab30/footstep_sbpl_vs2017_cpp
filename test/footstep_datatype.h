@@ -4,6 +4,7 @@
 #include <boost/shared_ptr.hpp>
 #include "tf/transform_datatypes.h"
 
+
 using namespace cv;
 using namespace std;
 
@@ -147,41 +148,23 @@ namespace gridmap_2d {
 
 
 
-//namespace tf
-//{
-//	struct orientation {
-//		double x;
-//		double y;
-//		double z;
-//		double w;
-//	};
-//	struct goal_pose {
-//		double x;
-//		double y;
-//		double z;
-//		struct orientation;
-//	};
-//	//static inline double getYaw(const struct orientation &msg_q) {
-//	//	Quaternion bt_q;
-//	//	quaternionMsgToTF(msg_q, bt_q);
-//	//	return getYaw(bt_q);
-//	//}
-//	//static const double QUATERNION_TOLERANCE = 0.1f;
-//	//static inline void quaternionMsgToTF(const struct orientation &msg, Quaternion& bt)
-//	//{
-//	//	bt = Quaternion(msg.x, msg.y, msg.z, msg.w);
-//	//	if (fabs(bt.length2() - 1) > QUATERNION_TOLERANCE)
-//	//	{
-//	//		ROS_WARN("MSG to TF: Quaternion Not Properly Normalized");
-//	//		bt.normalize();
-//	//	}
-//	//};
-//	//static inline double getYaw(const Quaternion& bt_q) {
-//	//	tfScalar useless_pitch, useless_roll, yaw;
-//	//	tf::Matrix3x3(bt_q).getRPY(useless_roll, useless_pitch, yaw);
-//	//	return yaw;
-//	//}
-//}
+namespace goalInfo
+{
+	struct orientation {
+		double x;
+		double y;
+		double z;
+		double w;
+	};
+	struct goal_pose {
+		double x;
+		double y;
+		double z;
+		struct orientation;
+	};
+
+	
+}
 
 namespace footstep_planner
 {

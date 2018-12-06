@@ -32,6 +32,13 @@
 #ifndef TF_TRANSFORM_DATATYPES_H
 #define TF_TRANSFORM_DATATYPES_H
 
+#define ROS_ERROR printf
+#define ROS_INFO printf
+#define ROS_ERROR_STREAM printf
+#define ROS_INFO_STREAM printf
+#define ROS_WARN printf
+#define ROS_DEBUG printf
+
 #ifndef __GNUC__
 # define __attribute__(x)
 #endif
