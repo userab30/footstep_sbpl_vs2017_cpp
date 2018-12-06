@@ -1,15 +1,16 @@
 #include <opencv2/opencv.hpp>
 #include <iostream>
 #include <boost/shared_ptr.hpp>
+#include "tf/transform_datatypes.h"
 //#include <tf/LinearMath/Quaternion.h>
 //#include <tf/LinearMath/Matrix3x3.h>
 
-#define ROS_ERROR printf
-#define ROS_INFO printf
-#define ROS_ERROR_STREAM printf
-#define ROS_INFO_STREAM printf
-#define ROS_WARN printf
-#define ROS_DEBUG printf
+//#define ROS_ERROR printf
+//#define ROS_INFO printf
+//#define ROS_ERROR_STREAM printf
+//#define ROS_INFO_STREAM printf
+//#define ROS_WARN printf
+//#define ROS_DEBUG printf
 
 using namespace cv;
 using namespace std;
