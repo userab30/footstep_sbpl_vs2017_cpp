@@ -19,4 +19,63 @@
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="angles\angles.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="tf\LinearMath\Matrix3x3.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="tf\LinearMath\MinMax.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="tf\LinearMath\QuadWord.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="tf\LinearMath\Quaternion.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="tf\LinearMath\Scalar.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="tf\LinearMath\Transform.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="tf\LinearMath\Vector3.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="tf\exceptions.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="tf\FrameGraph.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="tf\FrameGraphRequest.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="tf\FrameGraphResponse.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="tf\message_filter.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="tf\tf.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="tf\tfMessage.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="tf\time_cache.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="tf\transform_broadcaster.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="tf\transform_datatypes.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="tf\transform_listener.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+  </ItemGroup>
 </Project>

@@ -79,10 +79,10 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>C:\Program Files\boost\boost_1_68_0;C:\opencv\build\include;$(ProjectDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\opencv\build\include;C:\Program Files\boost\boost_1_68_0;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
-      <AdditionalLibraryDirectories>C:\opencv\build\x64\vc15\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>C:\opencv\build\x64\vc15\lib;C:\Program Files\boost\boost_1_68_0\lib64-msvc-14.1;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>opencv_world342d.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <SubSystem>Console</SubSystem>
     </Link>
@@ -125,6 +125,27 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="angles\angles.h" />
+    <ClInclude Include="tf\exceptions.h" />
+    <ClInclude Include="tf\FrameGraph.h" />
+    <ClInclude Include="tf\FrameGraphRequest.h" />
+    <ClInclude Include="tf\FrameGraphResponse.h" />
+    <ClInclude Include="tf\LinearMath\Matrix3x3.h" />
+    <ClInclude Include="tf\LinearMath\MinMax.h" />
+    <ClInclude Include="tf\LinearMath\QuadWord.h" />
+    <ClInclude Include="tf\LinearMath\Quaternion.h" />
+    <ClInclude Include="tf\LinearMath\Scalar.h" />
+    <ClInclude Include="tf\LinearMath\Transform.h" />
+    <ClInclude Include="tf\LinearMath\Vector3.h" />
+    <ClInclude Include="tf\message_filter.h" />
+    <ClInclude Include="tf\tf.h" />
+    <ClInclude Include="tf\tfMessage.h" />
+    <ClInclude Include="tf\time_cache.h" />
+    <ClInclude Include="tf\transform_broadcaster.h" />
+    <ClInclude Include="tf\transform_datatypes.h" />
+    <ClInclude Include="tf\transform_listener.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

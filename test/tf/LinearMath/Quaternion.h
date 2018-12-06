@@ -40,10 +40,10 @@ public:
   /**@brief Axis angle Constructor
    * @param axis The axis which the rotation is around
    * @param angle The magnitude of the rotation around the angle (Radians) */
-	//Quaternion(const Vector3& axis, const tfScalar& angle) 
-	//{ 
-	//	setRotation(axis, angle); 
-	//}
+	Quaternion(const Vector3& axis, const tfScalar& angle) 
+	{ 
+		setRotation(axis, angle); 
+	}
   /**@brief Constructor from Euler angles
    * @param yaw Angle around Y unless TF_EULER_DEFAULT_ZYX defined then Z
    * @param pitch Angle around X unless TF_EULER_DEFAULT_ZYX defined then Y
