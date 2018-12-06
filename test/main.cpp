@@ -1,5 +1,8 @@
 #include <opencv2/opencv.hpp>
 #include <iostream>
+#include <boost/shared_ptr.hpp>
+//#include <tf/LinearMath/Quaternion.h>
+//#include <tf/LinearMath/Matrix3x3.h>
 
 #define ROS_ERROR printf
 #define ROS_INFO printf
@@ -53,6 +56,8 @@ namespace gridmap_2d {
 		//vector data;
 	};
 	class GridMap2D {
+		const static uchar FREE = 255;  ///< char value for "free": 255
+		const static uchar OCCUPIED = 0; ///< char value for "free": 0
 	public:
 		cv::Mat m_binaryMap;	///< binary occupancy map. 255: free, 0 occupied.
 		cv::Mat m_distMap;		///< distance map (in meter)
@@ -60,10 +65,64 @@ namespace gridmap_2d {
 		MapInfo m_mapInfo;
 		std::string m_frameId;	///< "map" frame where ROS OccupancyGrid originated from
 
+		int getMap(bool unknown_as_obstacle, std::string yamlPath, std::string fileName);
+
 	};
 
-	//typedef boost::shared_ptr< GridMap2D> GridMap2DPtr;
+	int GridMap2D::getMap(bool unknown_as_obstacle,std::string yamlPath, std::string fileName)
+	{
+		cv::FileStorage fs_param;
+		fs_param.open(yamlPath + fileName, cv::FileStorage::READ);
+		if (!fs_param.isOpened())
+		{
+			std::cout << fileName << ": No file!" << std::endl;
+			return -1;
+		}
+
+
+		m_mapInfo.height = fs_param["info"]["height"];
+		m_mapInfo.width = fs_param["info"]["width"];
+		m_mapInfo.resolution = fs_param["info"]["resolution"];
+
+		m_frameId = fs_param["header"]["frame_id"];
+
+		m_binaryMap = cv::Mat(m_mapInfo.width, m_mapInfo.height, CV_8UC1);
+		m_distMap = cv::Mat(m_binaryMap.size(), CV_32FC1);
+
+
+		FileNode fs_node = fs_param["data"];
+		FileNodeIterator mapDataIter = fs_node.begin();
+		//TODO check / param
+		unsigned char map_occ_thres = 70;
+
+		// iterate over map, store in image
+		// (0,0) is lower left corner of OccupancyGrid
+		for (unsigned int j = 0; j < m_mapInfo.height; ++j) {
+			for (unsigned int i = 0; i < m_mapInfo.width; ++i) {
+				if ((signed int)*mapDataIter > map_occ_thres
+					|| (unknown_as_obstacle && (signed int)*mapDataIter < 0))
+				{
+					m_binaryMap.at<uchar>(i, j) = OCCUPIED;
+					//cout<< m_binaryMap.at<uchar>(i, j);
+				}
+				else {
+					m_binaryMap.at<uchar>(i, j) = FREE;
+				}
+				++mapDataIter;
+			}
+			//cout << "::::"<<(signed int)*mapDataIter <<"::::"<< int(m_binaryMap.at<uchar>(0, j))<< endl;
+		}
+
+		//////-------------------------flag------------------------------/////
+		//updateDistanceMap();
+		ROS_INFO("GridMap2D created with %d x %d cells at %f resolution.", m_mapInfo.width, m_mapInfo.height, m_mapInfo.resolution);
+
+		fs_param.release();
+	}
+
+	typedef boost::shared_ptr< GridMap2D> GridMap2DPtr;
 	//typedef boost::shared_ptr<const GridMap2D> GridMap2DConstPtr;
+
 }
 
 struct environment_params
@@ -92,6 +151,41 @@ struct environment_params
 	double heuristic_scale;
 };
 
+namespace tf
+{
+	struct orientation {
+		double x;
+		double y;
+		double z;
+		double w;
+	};
+	struct goal_pose {
+		double x;
+		double y;
+		double z;
+		struct orientation;
+	};
+	//static inline double getYaw(const struct orientation &msg_q) {
+	//	Quaternion bt_q;
+	//	quaternionMsgToTF(msg_q, bt_q);
+	//	return getYaw(bt_q);
+	//}
+	static const double QUATERNION_TOLERANCE = 0.1f;
+	//static inline void quaternionMsgToTF(const struct orientation &msg, Quaternion& bt)
+	//{
+	//	bt = Quaternion(msg.x, msg.y, msg.z, msg.w);
+	//	if (fabs(bt.length2() - 1) > QUATERNION_TOLERANCE)
+	//	{
+	//		ROS_WARN("MSG to TF: Quaternion Not Properly Normalized");
+	//		bt.normalize();
+	//	}
+	//};
+	//static inline double getYaw(const Quaternion& bt_q) {
+	//	tfScalar useless_pitch, useless_roll, yaw;
+	//	tf::Matrix3x3(bt_q).getRPY(useless_roll, useless_pitch, yaw);
+	//	return yaw;
+	//}
+}
 namespace footstep_planner
 {
 	//typedef std::vector<State>::const_iterator state_iter_t;
@@ -269,26 +363,7 @@ int getFileParam(environment_params &ivEnvironmentParams, footstep_planner::Foot
 	ivEnvironmentParams.max_step_width = sqrt(max_x*max_x + max_y * max_y) * 1.5;
 	return 1;
 }
-int getMap(gridmap_2d::GridMap2D &gridMap, std::string yamlPath, std::string fileName)
-{
-	cv::FileStorage fs_param;
-	fs_param.open(yamlPath + fileName, cv::FileStorage::READ);
-	if (!fs_param.isOpened())
-	{
-		std::cout << fileName << ": No file!" << std::endl;
-		return -1;
-	}
 
-
-	gridMap.m_mapInfo.height = fs_param["info"]["height"];
-	gridMap.m_mapInfo.width = fs_param["info"]["width"];
-	gridMap.m_mapInfo.resolution = fs_param["info"]["resolution"];
-
-	gridMap.m_frameId = fs_param["header"]["frame_id"];
-
-	gridMap.m_binaryMap = cv::Mat(gridMap.m_mapInfo.width, gridMap.m_mapInfo.height, CV_8UC1);
-	gridMap.m_distMap = cv::Mat(gridMap.m_binaryMap.size(), CV_32FC1);
-}
 int main(int argc, char** argv)
 {
 	string yamlPath = "..\\footstep_sbpl_vs2017_cpp\\humanoid_navigation\\footstep_planner\\config\\";
@@ -309,8 +384,11 @@ int main(int argc, char** argv)
 	string mapName = "env_map.yaml";
 	string startName = "env_start.yaml";
 	string goalName = "env_goal.yaml";
+
 	gridmap_2d::GridMap2D gridMap;
-	getMap(gridMap, envPath, mapName);
+	gridMap.getMap(0, envPath, mapName);
+
+
 
 	std::cout << "gridMap.m_mapInfo.height: " << gridMap.m_mapInfo.height << std::endl;
 
