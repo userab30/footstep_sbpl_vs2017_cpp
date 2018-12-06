@@ -212,14 +212,14 @@ namespace StartGoal{
 			return -1;
 		}
 
-		position.x = fs_param["pose"]["position"]["x"];
-		position.y = fs_param["pose"]["position"]["y"];
-		position.z = fs_param["pose"]["position"]["z"];
+		position.x = fs_param["pose"]["pose"]["position"]["x"];
+		position.y = fs_param["pose"]["pose"]["position"]["y"];
+		position.z = fs_param["pose"]["pose"]["position"]["z"];
 
-		orientation.x = fs_param["pose"]["orientation"]["x"];
-		orientation.y = fs_param["pose"]["orientation"]["y"];
-		orientation.z = fs_param["pose"]["orientation"]["z"];
-		orientation.w = fs_param["pose"]["orientation"]["w"];
+		orientation.x = fs_param["pose"]["pose"]["orientation"]["x"];
+		orientation.y = fs_param["pose"]["pose"]["orientation"]["y"];
+		orientation.z = fs_param["pose"]["pose"]["orientation"]["z"];
+		orientation.w = fs_param["pose"]["pose"]["orientation"]["w"];
 		//cout << orientation.w << endl << endl;
 
 		frame_id = fs_param["header"]["frame_id"];
