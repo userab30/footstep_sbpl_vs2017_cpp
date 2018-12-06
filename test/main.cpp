@@ -25,6 +25,7 @@ inline int disc_val(double length, double cell_size)
 {
 	return int(floor((length / cell_size) + 0.5));
 }
+
 namespace gridmap_2d {
 	/**
 	 * @brief Stores a nav_msgs::OccupancyGrid in a convenient opencv cv::Mat
@@ -116,12 +117,12 @@ namespace gridmap_2d {
 
 		//////-------------------------flag------------------------------/////
 		//updateDistanceMap();
-		ROS_INFO("GridMap2D created with %d x %d cells at %f resolution.", m_mapInfo.width, m_mapInfo.height, m_mapInfo.resolution);
+		//ROS_INFO("GridMap2D created with %d x %d cells at %f resolution.", m_mapInfo.width, m_mapInfo.height, m_mapInfo.resolution);
 
 		fs_param.release();
 	}
 
-	typedef boost::shared_ptr< GridMap2D> GridMap2DPtr;
+	typedef boost::shared_ptr<GridMap2D> GridMap2DPtr;
 	//typedef boost::shared_ptr<const GridMap2D> GridMap2DConstPtr;
 
 }
@@ -152,41 +153,43 @@ struct environment_params
 	double heuristic_scale;
 };
 
-namespace tf
-{
-	struct orientation {
-		double x;
-		double y;
-		double z;
-		double w;
-	};
-	struct goal_pose {
-		double x;
-		double y;
-		double z;
-		struct orientation;
-	};
-	//static inline double getYaw(const struct orientation &msg_q) {
-	//	Quaternion bt_q;
-	//	quaternionMsgToTF(msg_q, bt_q);
-	//	return getYaw(bt_q);
-	//}
-	static const double QUATERNION_TOLERANCE = 0.1f;
-	//static inline void quaternionMsgToTF(const struct orientation &msg, Quaternion& bt)
-	//{
-	//	bt = Quaternion(msg.x, msg.y, msg.z, msg.w);
-	//	if (fabs(bt.length2() - 1) > QUATERNION_TOLERANCE)
-	//	{
-	//		ROS_WARN("MSG to TF: Quaternion Not Properly Normalized");
-	//		bt.normalize();
-	//	}
-	//};
-	//static inline double getYaw(const Quaternion& bt_q) {
-	//	tfScalar useless_pitch, useless_roll, yaw;
-	//	tf::Matrix3x3(bt_q).getRPY(useless_roll, useless_pitch, yaw);
-	//	return yaw;
-	//}
-}
+
+//namespace tf
+//{
+//	struct orientation {
+//		double x;
+//		double y;
+//		double z;
+//		double w;
+//	};
+//	struct goal_pose {
+//		double x;
+//		double y;
+//		double z;
+//		struct orientation;
+//	};
+//	//static inline double getYaw(const struct orientation &msg_q) {
+//	//	Quaternion bt_q;
+//	//	quaternionMsgToTF(msg_q, bt_q);
+//	//	return getYaw(bt_q);
+//	//}
+//	//static const double QUATERNION_TOLERANCE = 0.1f;
+//	//static inline void quaternionMsgToTF(const struct orientation &msg, Quaternion& bt)
+//	//{
+//	//	bt = Quaternion(msg.x, msg.y, msg.z, msg.w);
+//	//	if (fabs(bt.length2() - 1) > QUATERNION_TOLERANCE)
+//	//	{
+//	//		ROS_WARN("MSG to TF: Quaternion Not Properly Normalized");
+//	//		bt.normalize();
+//	//	}
+//	//};
+//	//static inline double getYaw(const Quaternion& bt_q) {
+//	//	tfScalar useless_pitch, useless_roll, yaw;
+//	//	tf::Matrix3x3(bt_q).getRPY(useless_roll, useless_pitch, yaw);
+//	//	return yaw;
+//	//}
+//}
+
 namespace footstep_planner
 {
 	//typedef std::vector<State>::const_iterator state_iter_t;
@@ -239,6 +242,7 @@ namespace footstep_planner
 
 	};
 }
+
 int getFileParam(environment_params &ivEnvironmentParams, footstep_planner::FootstepPlanner &ivFootstepPlanner,std::string yamlPath, std::string fileName)
 {
 
@@ -310,8 +314,7 @@ int getFileParam(environment_params &ivEnvironmentParams, footstep_planner::Foot
 	int size_t = length(footsteps_theta);
 	if (size_x != size_y || size_x != size_t)
 	{
-		ROS_ERROR("Footstep parameterization has different sizes for x/y/theta. "
-			"Exit!");
+		//ROS_ERROR("Footstep parameterization has different sizes for x/y/theta. Exit!");
 		exit(2);
 	}
 	//////-------------------------flag------------------------------/////

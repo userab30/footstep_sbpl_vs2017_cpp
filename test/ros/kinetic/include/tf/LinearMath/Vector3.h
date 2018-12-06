@@ -17,6 +17,9 @@ subject to the following restrictions:
 #ifndef TF_VECTOR3_H
 #define TF_VECTOR3_H
 
+#ifndef __GNUC__
+# define __attribute__(x)
+#endif
 
 #include "Scalar.h"
 #include "MinMax.h"
