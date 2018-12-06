@@ -156,12 +156,16 @@ int main(int argc, char** argv)
 
 	gridmap_2d::GridMap2D gridMap;
 	gridMap.getMap(0, envPath, mapName);
+	ROS_INFO("GridMap2D created with %d x %d cells at %f resolution.\n", gridMap.m_mapInfo.width, gridMap.m_mapInfo.height, gridMap.m_mapInfo.resolution);
 
+	StartGoal::StartGoalInfo goalInfo;
+	goalInfo.getGoal(envPath, goalName);
+	ROS_INFO("Goal pose set to (%f %f %f)\n", goalInfo.position.x, goalInfo.position.y, goalInfo.theta);
 
+	StartGoal::StartGoalInfo startInfo;
+	startInfo.getStart(envPath, startName);
+	ROS_INFO("Start pose set to (%f %f %f)\n", startInfo.position.x, startInfo.position.y, startInfo.theta);
 
-
-
-	std::cout << "gridMap.m_mapInfo.height: " << gridMap.m_mapInfo.height << std::endl;
 
 	return 0;
 }

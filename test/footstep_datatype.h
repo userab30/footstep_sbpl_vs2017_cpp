@@ -139,33 +139,97 @@ namespace gridmap_2d {
 
 		fs_param.release();
 	}
-
 	typedef boost::shared_ptr<GridMap2D> GridMap2DPtr;
 	//typedef boost::shared_ptr<const GridMap2D> GridMap2DConstPtr;
 
 }
 
 
-
-
-namespace goalInfo
-{
-	struct orientation {
+namespace StartGoal{
+	struct oriInfo {
 		double x;
 		double y;
 		double z;
 		double w;
 	};
-	struct goal_pose {
+	struct posInfo {
 		double x;
 		double y;
 		double z;
-		struct orientation;
 	};
 
-	
-}
+	class StartGoalInfo {
+	public:
+		int seq;
+		std::string frame_id;
+		long stamp_secs;
+		long stamp_nsecs;
+		posInfo position ;
+		oriInfo orientation;
+		float theta;
+		
 
+		int getGoal(std::string yamlPath, std::string fileName);
+		int getStart(std::string yamlPath, std::string fileName);
+		//bool setGoal(float x, float y, float theta);
+
+	};
+
+	int StartGoalInfo::getGoal(std::string yamlPath, std::string fileName)
+	{
+		cv::FileStorage fs_param;
+		fs_param.open(yamlPath + fileName, cv::FileStorage::READ);
+		if (!fs_param.isOpened())
+		{
+			std::cout << fileName << ": No file!" << std::endl;
+			return -1;
+		}
+
+		position.x = fs_param["pose"]["position"]["x"];
+		position.y = fs_param["pose"]["position"]["y"];
+		position.z = fs_param["pose"]["position"]["z"];
+
+		orientation.x = fs_param["pose"]["orientation"]["x"];
+		orientation.y = fs_param["pose"]["orientation"]["y"];
+		orientation.z = fs_param["pose"]["orientation"]["z"];
+		orientation.w = fs_param["pose"]["orientation"]["w"];
+		//cout << orientation.w << endl << endl;
+
+		frame_id = fs_param["header"]["frame_id"];
+		
+		theta=tf::getYaw(orientation.x, orientation.y, orientation.z, orientation.w);
+		//static inline double getYaw(const tfScalar& x, const tfScalar& y, const tfScalar& z, const tfScalar& w)
+		fs_param.release();
+	};
+
+	int StartGoalInfo::getStart(std::string yamlPath, std::string fileName)
+	{
+		cv::FileStorage fs_param;
+		fs_param.open(yamlPath + fileName, cv::FileStorage::READ);
+		if (!fs_param.isOpened())
+		{
+			std::cout << fileName << ": No file!" << std::endl;
+			return -1;
+		}
+
+		position.x = fs_param["pose"]["position"]["x"];
+		position.y = fs_param["pose"]["position"]["y"];
+		position.z = fs_param["pose"]["position"]["z"];
+
+		orientation.x = fs_param["pose"]["orientation"]["x"];
+		orientation.y = fs_param["pose"]["orientation"]["y"];
+		orientation.z = fs_param["pose"]["orientation"]["z"];
+		orientation.w = fs_param["pose"]["orientation"]["w"];
+		//cout << orientation.w << endl << endl;
+
+		frame_id = fs_param["header"]["frame_id"];
+
+		theta = tf::getYaw(orientation.x, orientation.y, orientation.z, orientation.w);
+		//static inline double getYaw(const tfScalar& x, const tfScalar& y, const tfScalar& z, const tfScalar& w)
+		fs_param.release();
+	};
+
+}
 namespace footstep_planner
 {
 	//typedef std::vector<State>::const_iterator state_iter_t;
