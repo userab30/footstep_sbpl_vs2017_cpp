@@ -115,7 +115,8 @@ static const double QUATERNION_TOLERANCE = 0.1f;
 /** \brief convert Quaternion msg to Quaternion */
 static inline void quaternionMsgToTF(const Quaternion& msg, Quaternion& bt) 
 {
-  bt.setValue(msg.x(), msg.y(), msg.z(), msg.w());
+	bt = msg;
+  //bt.setValue(msg.x(), msg.y(), msg.z(), msg.w());
   if (fabs(bt.length2() - 1 ) > QUATERNION_TOLERANCE) 
     {
       ROS_WARN("MSG to TF: Quaternion Not Properly Normalized");
