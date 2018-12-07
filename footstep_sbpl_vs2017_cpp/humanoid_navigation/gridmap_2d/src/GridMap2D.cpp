@@ -122,7 +122,7 @@ namespace gridmap_2d {
 
 		//////-------------------------flag------------------------------/////
 		updateDistanceMap();
-		PRINT_INFO("GridMap2D created with %d x %d cells at %f resolution.", m_mapInfo.width, m_mapInfo.height, m_mapInfo.resolution);
+		PRINT_INFO("GridMap2D created with %d x %d cells at %f resolution.\n", m_mapInfo.width, m_mapInfo.height, m_mapInfo.resolution);
 
 		typedef boost::shared_ptr<GridMap2D> GridMap2DPtr;
 		typedef boost::shared_ptr<const GridMap2D> GridMap2DConstPtr;

@@ -293,8 +293,10 @@ namespace footstep_planner
 			y += theta_sin * ivOriginFootShiftX - theta_cos * ivOriginFootShiftY;
 
 		// collision check for the foot center
-		return collision_check(x, y, theta, ivFootsizeX, ivFootsizeY,
-			ivCollisionCheckAccuracy, *ivMapPtr);
+		////------------------------------------flag------------------------------------------////
+		return true;
+		//return collision_check(x, y, theta, ivFootsizeX, ivFootsizeY,
+		//	ivCollisionCheckAccuracy, *ivMapPtr);
 	}
 
 

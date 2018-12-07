@@ -85,11 +85,7 @@ namespace footstep_planner
 		ivEnvironmentParams.max_inverse_footstep_theta = fs_param["foot"]["max"]["inverse"]["step"]["theta"];
 		fs_param.release();
 
-		std::cout << "ivEnvironmentParams.num_angle_bins:" << ivEnvironmentParams.num_angle_bins << std::endl;
-		std::cout << "ivEnvironmentParams.forward_search: " << ivEnvironmentParams.forward_search << std::endl;
-		std::cout << "ivEnvironmentParams.cell_size: " << ivEnvironmentParams.cell_size << std::endl;
-		//std::cout << "ivEnvironmentParams.step_range: " << ivEnvironmentParams.step_range[0] << std::endl;
-		std::cout << "ivEnvironmentParams.max_step_width: " << ivEnvironmentParams.max_step_width << std::endl;
+
 
 		// footstep discretization  std::vector 
 		double footsteps_x[] = { 0.00, 0.22, 0.00, -0.08, 0.12, 0.15, 0.08, -0.04, -0.10, 0.00, 0.15, 0.12, 0.12, 0.06 };
@@ -153,6 +149,12 @@ namespace footstep_planner
 		ivEnvironmentParams.step_range.push_back(ivEnvironmentParams.step_range[0]);
 		ivEnvironmentParams.max_step_width = sqrt(max_x*max_x + max_y * max_y) * 1.5;
 
+		//std::cout << "ivEnvironmentParams.num_angle_bins:" << ivEnvironmentParams.num_angle_bins << std::endl;
+		//std::cout << "ivEnvironmentParams.forward_search: " << ivEnvironmentParams.forward_search << std::endl;
+		//std::cout << "ivEnvironmentParams.cell_size: " << ivEnvironmentParams.cell_size << std::endl;
+		////std::cout << "ivEnvironmentParams.step_range: " << ivEnvironmentParams.step_range[0] << std::endl;
+		//std::cout << "ivEnvironmentParams.max_step_width: " << ivEnvironmentParams.max_step_width << std::endl;
+
 		// initialize the heuristic
 		boost::shared_ptr<Heuristic> h;
 		//if (heuristic_type == "EuclideanHeuristic")
@@ -191,7 +193,7 @@ namespace footstep_planner
 					max_step_width,
 					foot_incircle));
 			PRINT_INFO("FootstepPlanner heuristic: 2D path euclidean distance with step "
-				"costs");
+				"costs \n");
 
 			// keep a local ptr for visualization
 			ivPathCostHeuristicPtr = boost::dynamic_pointer_cast<PathCostHeuristic>(h);
@@ -213,21 +215,21 @@ namespace footstep_planner
 			ivPlannerType == "ADPlanner" ||
 			ivPlannerType == "RSTARPlanner")
 		{
-			//PRINT_INFO_STREAM("Planning with " << ivPlannerType);
+			PRINT_INFO_STREAM("Planning with %s\n" ,ivPlannerType.c_str());
 		}
 		else
 		{
-			//PRINT_ERROR_STREAM("Planner "<< ivPlannerType <<" not available / "
+			PRINT_ERROR_STREAM("Planner %s not available \n ", ivPlannerType.c_str());
 							 //"untested.");
 			exit(1);
 		}
 		if (ivEnvironmentParams.forward_search)
 		{
-			PRINT_INFO_STREAM("Search direction: forward planning");
+			PRINT_INFO_STREAM("Search direction: forward planning\n");
 		}
 		else
 		{
-			PRINT_INFO_STREAM("Search direction: backward planning");
+			PRINT_INFO_STREAM("Search direction: backward planning\n");
 		}
 		setPlanner();
 	}
@@ -333,18 +335,18 @@ namespace footstep_planner
 		if (ret && solution_state_ids.size() > 0)
 		{
 			if (!path_is_new)
-				PRINT_WARN("Solution found by SBPL is the same as the old solution. This could indicate that replanning failed.");
+				PRINT_WARN("Solution found by SBPL is the same as the old solution. This could indicate that replanning failed.\n");
 
-			PRINT_INFO("Solution of size %zu found after %f s",
+			PRINT_INFO("Solution of size %zu found after %f s\n",
 				solution_state_ids.size(), //总共的步数
 				(clock() - startTime) / CLOCKS_PER_SEC); //.toSec()
 
 			if (true)//extractPath(solution_state_ids))
 			{
-				PRINT_INFO("Expanded states: %i total / %i new",
+				PRINT_INFO("Expanded states: %i total / %i new\n",
 					ivPlannerEnvironmentPtr->getNumExpandedStates(),
 					ivPlannerPtr->get_n_expands());
-				PRINT_INFO("Final eps: %f", ivPlannerPtr->get_final_epsilon());
+				PRINT_INFO("Final eps: %f\n", ivPlannerPtr->get_final_epsilon());
 				PRINT_INFO("Path cost: %f (%i)\n", ivPathCost, path_cost);
 
 				ivPlanningStatesIds = solution_state_ids;
@@ -367,7 +369,7 @@ namespace footstep_planner
 			//broadcastExpandedNodesVis();
 			//broadcastRandomNodesVis();
 
-			PRINT_ERROR("No solution found");
+			PRINT_ERROR("No solution found\n");
 			return false;
 		}
 	}
@@ -1144,5 +1146,6 @@ namespace footstep_planner
 	//
 	//  marker->lifetime = ros::Duration();
 	//}
+
 }
 
