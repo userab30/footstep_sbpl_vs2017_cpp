@@ -29,6 +29,7 @@
  */
 
 #include "gridmap_2d/GridMap2D.h"
+
  //#include <ros/console.h>
 
 namespace gridmap_2d {
@@ -95,8 +96,8 @@ namespace gridmap_2d {
 		m_distMap = cv::Mat(m_binaryMap.size(), CV_32FC1);
 
 
-		FileNode fs_node = fs_param["data"];
-		FileNodeIterator mapDataIter = fs_node.begin();
+		cv::FileNode fs_node = fs_param["data"];
+		cv::FileNodeIterator mapDataIter = fs_node.begin();
 		//TODO check / param
 		unsigned char map_occ_thres = 70;
 

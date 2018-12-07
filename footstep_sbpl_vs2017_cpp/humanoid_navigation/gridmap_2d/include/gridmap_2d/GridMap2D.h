@@ -36,8 +36,10 @@
 #include <opencv2/imgproc/imgproc.hpp>
 //#include <nav_msgs/OccupancyGrid.h>
 
-#include "advise_input/footstep_datatype.h"
-
+//#include "advise_input/footstep_datatype.h"
+#include <footstep_planner/helper.h>
+#include <boost/shared_ptr.hpp>
+#include <opencv2/opencv.hpp>
 
 
 namespace gridmap_2d{
@@ -166,7 +168,8 @@ public:
   ///@brief Recalculate the internal distance map. Required after manual changes to the grid map data.
   void updateDistanceMap();
 
-  //inline const nav_msgs::MapMetaData& getInfo() const {return m_mapInfo;}
+  inline const gridmap_2d::MapInfo& getInfo() const {return m_mapInfo;}
+  //inline const nav_msgs::MapMetaData& getInfo() const { return m_mapInfo; }
   inline float getResolution() const {return m_mapInfo.resolution; }
   /// returns the tf frame ID of the map (usually "/map")
   inline const std::string getFrameID() const {return m_frameId;}

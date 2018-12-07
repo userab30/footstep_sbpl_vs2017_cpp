@@ -24,10 +24,16 @@
 #define DEBUG_HASH 0
 #define DEBUG_TIME 0
 
+#define PRINT_ERROR printf
+#define PRINT_INFO printf
+#define PRINT_ERROR_STREAM printf
+#define PRINT_INFO_STREAM printf
+#define PRINT_WARN printf
+#define PRINT_DEBUG printf
 
 #include <gridmap_2d/GridMap2D.h>
 #include <angles/angles.h>
-#include <tf/tf.h>
+//#include <tf/tf.h>
 
 #define _USE_MATH_DEFINES
 #include <math.h>

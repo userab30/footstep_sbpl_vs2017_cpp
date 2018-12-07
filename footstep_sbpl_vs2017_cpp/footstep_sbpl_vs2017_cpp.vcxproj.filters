@@ -81,16 +81,10 @@
     <ClCompile Include="humanoid_navigation\footstep_planner\src\Footstep.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="humanoid_navigation\footstep_planner\src\footstep_planner.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
     <ClCompile Include="humanoid_navigation\footstep_planner\src\FootstepPlanner.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="humanoid_navigation\footstep_planner\src\FootstepPlannerEnvironment.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="humanoid_navigation\footstep_planner\src\FootstepPlannerNode.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="humanoid_navigation\footstep_planner\src\helper.cpp">
@@ -111,7 +105,7 @@
     <ClCompile Include="humanoid_navigation\footstep_planner\src\State.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="..\test\main.cpp">
+    <ClCompile Include="humanoid_navigation\footstep_planner\src\main.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
@@ -133,6 +127,9 @@
   <ItemGroup>
     <ClInclude Include="..\test\footstep_datatype.h">
       <Filter>源文件</Filter>
+    </ClInclude>
+    <ClInclude Include="humanoid_navigation\footstep_planner\include\advise_input\footstep_datatype.h">
+      <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

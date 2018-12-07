@@ -34,8 +34,9 @@
 #include <vector>
 #include <unordered_set>
 
-#include "advise_input/footstep_datatype.h"
+//#include "advise_input/footstep_datatype.h"
 //#include <tr1/hashtable.h>
+#include <boost/shared_ptr.hpp>
 
 
 namespace footstep_planner
