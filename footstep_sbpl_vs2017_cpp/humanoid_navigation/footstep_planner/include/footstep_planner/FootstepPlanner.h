@@ -372,6 +372,7 @@ namespace StartGoal {
 		theta = tf::getYaw(orientation.x, orientation.y, orientation.z, orientation.w);
 		//static inline double getYaw(const tfScalar& x, const tfScalar& y, const tfScalar& z, const tfScalar& w)
 		fs_param.release();
+		return 1;
 	};
 
 	int StartGoalInfo::getStart(std::string yamlPath, std::string fileName)
@@ -399,6 +400,7 @@ namespace StartGoal {
 		theta = tf::getYaw(orientation.x, orientation.y, orientation.z, orientation.w);
 		//static inline double getYaw(const tfScalar& x, const tfScalar& y, const tfScalar& z, const tfScalar& w)
 		fs_param.release();
+		return 1;
 	};
 
 }

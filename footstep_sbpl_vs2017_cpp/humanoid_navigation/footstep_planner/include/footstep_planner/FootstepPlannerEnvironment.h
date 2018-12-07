@@ -37,6 +37,8 @@
 //#include "advise_input/footstep_datatype.h"
 //#include <tr1/hashtable.h>
 #include <boost/shared_ptr.hpp>
+#include "tf/transform_datatypes.h"
+#
 
 
 namespace footstep_planner

@@ -35,7 +35,7 @@
 #include <angles/angles.h>
 //#include <tf/tf.h>
 
-#define _USE_MATH_DEFINES
+//#define _USE_MATH_DEFINES
 #include <math.h>
 
 
@@ -205,8 +205,8 @@ inline int round(double r)
  * @return True if the footstep collides with an obstacle.
  */
 bool collision_check(double x, double y, double theta,
-                     double height, double width, int accuracy,
-                     const gridmap_2d::GridMap2D& distance_map);
+	double height, double width, int accuracy,
+	const gridmap_2d::GridMap2D& distance_map);
 
 
 /**

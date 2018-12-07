@@ -447,6 +447,7 @@ namespace footstep_planner
 			return false;
 		}
 
+		//Transform
 		tf::Transform step =
 			tf::Pose(
 				tf::createQuaternionFromYaw(
