@@ -144,7 +144,7 @@ public:
    * @return True if a replanning is necessary, i.e. the old path is not valid
    * any more.
    */
-  bool updateMap(const gridmap_2d::GridMap2DPtr map);
+  //bool updateMap(const gridmap_2d::GridMap2DPtr map);
 
   void setMarkerNamespace(const std::string& ns)
   {

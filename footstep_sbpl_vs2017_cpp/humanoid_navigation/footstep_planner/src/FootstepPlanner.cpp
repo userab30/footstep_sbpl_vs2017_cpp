@@ -242,22 +242,22 @@ FootstepPlanner::setPlanner()
         new ARAPlanner(ivPlannerEnvironmentPtr.get(),
                        ivEnvironmentParams.forward_search));
   }
-  else if (ivPlannerType == "ADPlanner")
-  {
-    ivPlannerPtr.reset(
-        new ADPlanner(ivPlannerEnvironmentPtr.get(),
-                      ivEnvironmentParams.forward_search));
-  }
-  else if (ivPlannerType == "RSTARPlanner")
-  {
-    RSTARPlanner* p =
-        new RSTARPlanner(ivPlannerEnvironmentPtr.get(),
-                         ivEnvironmentParams.forward_search);
-    // new options, require patched SBPL
-    //          p->set_local_expand_thres(500);
-    //          p->set_eps_step(1.0);
-    ivPlannerPtr.reset(p);
-  }
+  //else if (ivPlannerType == "ADPlanner")
+  //{
+  //  ivPlannerPtr.reset(
+  //      new ADPlanner(ivPlannerEnvironmentPtr.get(),
+  //                    ivEnvironmentParams.forward_search));
+  //}
+  //else if (ivPlannerType == "RSTARPlanner")
+  //{
+  //  RSTARPlanner* p =
+  //      new RSTARPlanner(ivPlannerEnvironmentPtr.get(),
+  //                       ivEnvironmentParams.forward_search);
+  //  // new options, require patched SBPL
+  //  //          p->set_local_expand_thres(500);
+  //  //          p->set_eps_step(1.0);
+  //  ivPlannerPtr.reset(p);
+  //}
   //        else if (ivPlannerType == "ANAPlanner")
   //        	ivPlannerPtr.reset(new anaPlanner(ivPlannerEnvironmentPtr.get(),
   //        	                                  ivForwardSearch));

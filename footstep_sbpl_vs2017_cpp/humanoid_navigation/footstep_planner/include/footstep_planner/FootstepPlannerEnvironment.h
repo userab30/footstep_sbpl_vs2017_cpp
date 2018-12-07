@@ -27,12 +27,14 @@
 #include <footstep_planner/Footstep.h>
 #include <footstep_planner/PlanningState.h>
 #include <footstep_planner/State.h>
-#include <humanoid_nav_msgs/ClipFootstep.h>
+//#include <humanoid_nav_msgs/ClipFootstep.h>
 #include <sbpl/headers.h>
 
 #include <math.h>
 #include <vector>
 #include <unordered_set>
+
+#include "advise_input/footstep_datatype.h"
 //#include <tr1/hashtable.h>
 
 

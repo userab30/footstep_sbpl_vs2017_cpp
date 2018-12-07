@@ -34,9 +34,9 @@
 
 #include <opencv2/core/core.hpp>
 #include <opencv2/imgproc/imgproc.hpp>
-#include <nav_msgs/OccupancyGrid.h>
+//#include <nav_msgs/OccupancyGrid.h>
 
-
+#include "advise_input/footstep_datatype.h"
 
 
 
@@ -46,11 +46,55 @@ namespace gridmap_2d{
  * as binary map (free: 255, occupied: 0) and as distance map (distance
  * to closest obstacle in meter).
  */
+	struct orientInfo {
+		double x;
+		double y;
+		double z;
+		double w;
+	};
+	struct posInfo {
+		double x;
+		double y;
+		double z;
+	};
+	struct originInfo {
+
+		posInfo position;
+		orientInfo orientation;
+	};
+
+struct MapInfo {
+	//header
+	int seq;
+	std::string frame_id;
+	long stamp_secs;
+	long stamp_nsecs;
+
+	//info
+	long map_load_time_secs;
+	long map_load_time_nsecs;
+	float resolution;
+	int width;
+	int height;
+	originInfo origin;
+
+	//float origin_position_x;
+	//float origin_position_y;
+	//float origin_position_z;
+
+	//float origin_orientation_x;
+	//float origin_orientation_y;
+	//float origin_orientation_z;
+	//float origin_orientation_w;
+
+	//vector data;
+};
 class GridMap2D {
 public:
   GridMap2D();
   ///@brief Create from nav_msgs::OccupancyGrid
-  GridMap2D(const nav_msgs::OccupancyGridConstPtr& grid_map, bool unknown_as_obstacle = false);
+  //GridMap2D(const nav_msgs::OccupancyGridConstPtr& grid_map, bool unknown_as_obstacle = false);
+  int getMap(bool unknown_as_obstacle, std::string yamlPath, std::string fileName);
   ///@brief Copy constructor, performs a deep copy of underlying data structures
   GridMap2D(const GridMap2D& other);
   virtual ~GridMap2D();
@@ -109,10 +153,12 @@ public:
   bool isOccupiedAtCell(unsigned int mx, unsigned int my) const;
 
   ///@brief Initialize map from a ROS OccupancyGrid message
-  void setMap(const nav_msgs::OccupancyGridConstPtr& grid_map, bool unknown_as_obstacle = false);
+  //void setMap(const nav_msgs::OccupancyGridConstPtr& grid_map, bool unknown_as_obstacle = false);
 
-  ///@brief Converts back into a ROS nav_msgs::OccupancyGrid msg
-  nav_msgs::OccupancyGrid toOccupancyGridMsg() const;
+  /////@brief Converts back into a ROS nav_msgs::OccupancyGrid msg
+
+  ////----------------------------flag--------------------------------------//
+  //nav_msgs::OccupancyGrid toOccupancyGridMsg() const;
 
   ///@brief Initialize from an existing cv::Map. mapInfo (in particular resolution) remains the same!
   void setMap(const cv::Mat& binary_map);
@@ -120,7 +166,7 @@ public:
   ///@brief Recalculate the internal distance map. Required after manual changes to the grid map data.
   void updateDistanceMap();
 
-  inline const nav_msgs::MapMetaData& getInfo() const {return m_mapInfo;}
+  //inline const nav_msgs::MapMetaData& getInfo() const {return m_mapInfo;}
   inline float getResolution() const {return m_mapInfo.resolution; }
   /// returns the tf frame ID of the map (usually "/map")
   inline const std::string getFrameID() const {return m_frameId;}
@@ -134,10 +180,13 @@ public:
   const static uchar FREE = 255;  ///< char value for "free": 255
   const static uchar OCCUPIED = 0; ///< char value for "free": 0
 
+  
+
 protected:
   cv::Mat m_binaryMap;	///< binary occupancy map. 255: free, 0 occupied.
   cv::Mat m_distMap;		///< distance map (in meter)
-  nav_msgs::MapMetaData m_mapInfo;
+  //nav_msgs::MapMetaData m_mapInfo;
+  MapInfo m_mapInfo;
   std::string m_frameId;	///< "map" frame where ROS OccupancyGrid originated from
 
 };
