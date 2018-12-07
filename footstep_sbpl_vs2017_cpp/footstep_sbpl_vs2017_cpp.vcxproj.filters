@@ -111,6 +111,9 @@
     <ClCompile Include="humanoid_navigation\footstep_planner\src\State.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="..\test\main.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="humanoid_navigation\footstep_planner\config\footsteps_asimo.yaml" />
@@ -126,5 +129,10 @@
     <Image Include="humanoid_navigation\footstep_planner\maps\sample.gif">
       <Filter>资源文件</Filter>
     </Image>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\test\footstep_datatype.h">
+      <Filter>源文件</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

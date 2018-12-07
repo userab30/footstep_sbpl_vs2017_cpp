@@ -120,6 +120,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\test\main.cpp" />
     <ClCompile Include="humanoid_navigation\footstep_planner\src\Footstep.cpp" />
     <ClCompile Include="humanoid_navigation\footstep_planner\src\FootstepPlanner.cpp" />
     <ClCompile Include="humanoid_navigation\footstep_planner\src\FootstepPlannerEnvironment.cpp" />
@@ -165,6 +166,9 @@
   </ItemGroup>
   <ItemGroup>
     <Image Include="humanoid_navigation\footstep_planner\maps\sample.gif" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\test\footstep_datatype.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
