@@ -294,9 +294,8 @@ namespace footstep_planner
 
 		// collision check for the foot center
 		////------------------------------------flag------------------------------------------////
-		return true;
-		//return collision_check(x, y, theta, ivFootsizeX, ivFootsizeY,
-		//	ivCollisionCheckAccuracy, *ivMapPtr);
+		//return true;
+		return footstep_planner::collision_check(x, y, theta, ivFootsizeX, ivFootsizeY,ivCollisionCheckAccuracy, *ivMapPtr);
 	}
 
 
