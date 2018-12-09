@@ -75,9 +75,6 @@
     <ClCompile Include="sbpl\src\utils\utils.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="humanoid_navigation\gridmap_2d\src\GridMap2D.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
     <ClCompile Include="humanoid_navigation\footstep_planner\src\Footstep.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
@@ -106,6 +103,9 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="humanoid_navigation\footstep_planner\src\main.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="humanoid_navigation\gridmap_2d\src\GridMap2D.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

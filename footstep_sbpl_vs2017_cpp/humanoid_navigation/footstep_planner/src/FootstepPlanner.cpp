@@ -972,7 +972,7 @@ namespace footstep_planner
 	{
 		StartGoalInfo startInfo;
 		startInfo.getStart(filepath);
-		PRINT_INFO("Start pose set to (%f %f %f)\n", startInfo.position.x, startInfo.position.y, startInfo.theta);
+		
 		oriInfo ori = startInfo.orientation;
 		if (setStart(startInfo.position.x,startInfo.position.y,
 			tf::getYaw(ori.x, ori.y, ori.z, ori.w)))
@@ -990,7 +990,7 @@ namespace footstep_planner
 	{
 		StartGoalInfo goalInfo;
 		goalInfo.getGoal(filepath);
-		PRINT_INFO("Goal pose set to (%f %f %f)\n", goalInfo.position.x, goalInfo.position.y, goalInfo.theta);
+		
 		// update the goal states in the environment
 		oriInfo ori = goalInfo.orientation;
 		bool status = setGoal(goalInfo.position.x,goalInfo.position.y,

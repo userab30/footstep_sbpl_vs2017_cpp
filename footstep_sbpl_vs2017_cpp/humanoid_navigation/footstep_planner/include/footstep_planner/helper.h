@@ -40,6 +40,7 @@
 #define PRINT_WARN printf
 #define PRINT_DEBUG printf
 
+
 namespace footstep_planner
 {
 static const double TWO_PI = 2 * M_PI;
@@ -185,29 +186,6 @@ inline int round(double r)
 {
   return (r > 0.0) ? floor(r + 0.5) : ceil(r - 0.5);
 }
-
-
-/**
- * @brief Checks if a footstep (represented by its center and orientation)
- * collides with an obstacle. The check is done by recursively testing if
- * either the circumcircle of the foot, the inner circle of the foot or the
- * area in between has an appropriate distance to the nearest obstacle.
- *
- * @param x Global position of the foot in x direction.
- * @param y Global position of the foot in y direction.
- * @param theta Global orientation of the foot.
- * @param height Size of the foot in x direction.
- * @param width Size of the foot in y direction.
- * @param accuracy (0) circumcircle of the foot; (1) incircle of the foot;
- * (2) circumcircle and incircle recursivly checked for the whole foot
- * @param distance_map Contains distance information to the nearest
- * obstacle.
- *
- * @return True if the footstep collides with an obstacle.
- */
-bool collision_check(double x, double y, double theta,
-	double height, double width, int accuracy,
-	const gridmap_2d::GridMap2D& distance_map);
 
 
 /**

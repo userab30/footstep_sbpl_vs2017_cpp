@@ -37,10 +37,6 @@ int main(int argc, char** argv)
 	ivFootstepPlanner.LoadStartPose(envPath + startName);
 	ivFootstepPlanner.LoadGoalPose(envPath + goalName);
 
-	
-
-	
-
 
 	return 0;
 }

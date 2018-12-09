@@ -91,6 +91,7 @@ struct MapInfo {
 
 	//vector data;
 };
+
 class GridMap2D {
 public:
   GridMap2D();
@@ -196,8 +197,9 @@ protected:
 
 };
 
-typedef boost::shared_ptr< GridMap2D> GridMap2DPtr;
+typedef boost::shared_ptr<GridMap2D> GridMap2DPtr;
 typedef boost::shared_ptr<const GridMap2D> GridMap2DConstPtr;
+
 }
 
 #endif /* GRIDMAP2D_H_ */
