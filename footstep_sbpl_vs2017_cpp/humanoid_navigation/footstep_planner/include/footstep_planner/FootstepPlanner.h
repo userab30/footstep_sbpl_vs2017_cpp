@@ -49,9 +49,38 @@
 //#include "advise_input/footstep_datatype.h"
 #include <boost/shared_ptr.hpp>
 #include "tf/transform_datatypes.h"
+using namespace std;
 
 namespace footstep_planner
 {
+struct oriInfo {
+		double x;
+		double y;
+		double z;
+		double w;
+	};
+struct posInfo {
+		double x;
+		double y;
+		double z;
+	};
+
+class StartGoalInfo {
+	public:
+		int seq;
+		std::string frame_id;
+		long stamp_secs;
+		long stamp_nsecs;
+		posInfo position;
+		oriInfo orientation;
+		float theta;
+
+
+		int getGoal(std::string fileName);
+		int getStart(std::string fileName);
+
+	};
+
 typedef std::vector<State>::const_iterator state_iter_t;
 
 /**
@@ -64,6 +93,9 @@ public:
   FootstepPlanner(std::string yamlPath, std::string fileName);
   virtual ~FootstepPlanner();
 
+  int LoadMap(std::string mapfile);
+  void LoadGoalPose(string filepath);
+  void LoadStartPose(string filepath);
   /**
    * @brief Start a planning task from scratch (will delete information
    * of previous planning tasks). Map and start, goal poses need to be
@@ -112,12 +144,12 @@ public:
   // */
   //bool setGoal(const geometry_msgs::PoseStampedConstPtr goal_pose);
 
-  ///**
-  // * @brief Sets the goal pose as a robot pose centered between two feet.
-  // *
-  // * @return True if the two foot poses have been set successfully.
-  // */
-  //bool setGoal(float x, float y, float theta);
+  /**
+   * @brief Sets the goal pose as a robot pose centered between two feet.
+   *
+   * @return True if the two foot poses have been set successfully.
+   */
+  bool setGoal(float x, float y, float theta);
 
   ///**
   // * @brief Sets the start pose as a robot pose centered between two feet.
@@ -126,19 +158,19 @@ public:
   // */
   //bool setStart(const geometry_msgs::PoseStampedConstPtr start_pose);
 
-  ///**
-  // * @brief Sets the start pose as a robot pose centered between two feet.
-  // *
-  // * @return True if the two foot poses have been set successfully.
-  // */
-  //bool setStart(float x, float y, float theta);
+  /**
+   * @brief Sets the start pose as a robot pose centered between two feet.
+   *
+   * @return True if the two foot poses have been set successfully.
+   */
+  bool setStart(float x, float y, float theta);
 
-  ///**
-  // * @brief Sets the start pose as position of left and right footsteps.
-  // *
-  // * @return True if the two foot poses have been set successfully.
-  // */
-  //bool setStart(const State& left_foot, const State& right_foot);
+  /**
+   * @brief Sets the start pose as position of left and right footsteps.
+   *
+   * @return True if the two foot poses have been set successfully.
+   */
+  bool setStart(const State& left_foot, const State& right_foot);
 
   /**
    * @brief Updates the map in the planning environment.
@@ -146,7 +178,7 @@ public:
    * @return True if a replanning is necessary, i.e. the old path is not valid
    * any more.
    */
-  //bool updateMap(const gridmap_2d::GridMap2DPtr map);
+  bool updateMap(const gridmap_2d::GridMap2DPtr map);
 
   void setMarkerNamespace(const std::string& ns)
   {
@@ -271,7 +303,7 @@ protected:
 
 
   /// @brief Updates the environment in case of a changed map.
-  //void updateEnvironment(const gridmap_2d::GridMap2DPtr old_map);
+  void updateEnvironment(const gridmap_2d::GridMap2DPtr old_map);
 
   boost::shared_ptr<FootstepPlannerEnvironment> ivPlannerEnvironmentPtr;
   gridmap_2d::GridMap2DPtr ivMapPtr;
@@ -318,6 +350,7 @@ protected:
 
   std::vector<int> ivPlanningStatesIds;
 };
+
 }
 
 #endif  // FOOTSTEP_PLANNER_FOOTSTEPPLANNER_H_

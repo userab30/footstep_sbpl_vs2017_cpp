@@ -40,11 +40,10 @@ namespace gridmap_2d {
 
 	}
 
-	//GridMap2D::GridMap2D(const nav_msgs::OccupancyGridConstPtr& gridMap, bool unknown_as_obstacle) {
-	//
-	//  setMap(gridMap, unknown_as_obstacle);
-	//
-	//}
+	GridMap2D::GridMap2D(std::string fileName, bool unknown_as_obstacle) {
+	
+		//LoadMap(fileName,unknown_as_obstacle);
+	}
 
 	GridMap2D::GridMap2D(const GridMap2D& other)
 		: m_binaryMap(other.m_binaryMap.clone()),
@@ -65,10 +64,10 @@ namespace gridmap_2d {
 		m_distMap = m_distMap * m_mapInfo.resolution;
 	}
 
-	int GridMap2D::getMap(bool unknown_as_obstacle, std::string yamlPath, std::string fileName)
+	int GridMap2D::LoadMap(std::string fileName, bool unknown_as_obstacle)
 	{
 		cv::FileStorage fs_param;
-		fs_param.open(yamlPath + fileName, cv::FileStorage::READ);
+		fs_param.open(fileName, cv::FileStorage::READ);
 		if (!fs_param.isOpened())
 		{
 			std::cout << fileName << ": No file!" << std::endl;

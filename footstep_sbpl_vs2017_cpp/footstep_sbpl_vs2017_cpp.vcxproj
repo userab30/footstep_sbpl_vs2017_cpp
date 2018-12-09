@@ -167,10 +167,6 @@
   <ItemGroup>
     <Image Include="humanoid_navigation\footstep_planner\maps\sample.gif" />
   </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="..\test\footstep_datatype.h" />
-    <ClInclude Include="humanoid_navigation\footstep_planner\include\advise_input\footstep_datatype.h" />
-  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

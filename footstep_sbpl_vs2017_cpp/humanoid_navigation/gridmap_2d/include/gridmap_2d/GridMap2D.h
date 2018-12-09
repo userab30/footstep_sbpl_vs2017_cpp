@@ -96,7 +96,9 @@ public:
   GridMap2D();
   ///@brief Create from nav_msgs::OccupancyGrid
   //GridMap2D(const nav_msgs::OccupancyGridConstPtr& grid_map, bool unknown_as_obstacle = false);
-  int getMap(bool unknown_as_obstacle, std::string yamlPath, std::string fileName);
+  GridMap2D(std::string fileName, bool unknown_as_obstacle);
+  int LoadMap(std::string fileName, bool unknown_as_obstacle);
+  //int getMap(bool unknown_as_obstacle, std::string yamlPath, std::string fileName);
   ///@brief Copy constructor, performs a deep copy of underlying data structures
   GridMap2D(const GridMap2D& other);
   virtual ~GridMap2D();

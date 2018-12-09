@@ -22,6 +22,7 @@
  //#include <humanoid_nav_msgs/ClipFootstep.h>
 //#include "advise_input/footstep_datatype.h"
 
+using namespace std;
 using gridmap_2d::GridMap2D;
 using gridmap_2d::GridMap2DPtr;
 
@@ -84,8 +85,6 @@ namespace footstep_planner
 		ivEnvironmentParams.max_inverse_footstep_y = fs_param["foot"]["max"]["inverse"]["step"]["y"];
 		ivEnvironmentParams.max_inverse_footstep_theta = fs_param["foot"]["max"]["inverse"]["step"]["theta"];
 		fs_param.release();
-
-
 
 		// footstep discretization  std::vector 
 		double footsteps_x[] = { 0.00, 0.22, 0.00, -0.08, 0.12, 0.15, 0.08, -0.04, -0.10, 0.00, 0.15, 0.12, 0.12, 0.06 };
@@ -603,7 +602,20 @@ namespace footstep_planner
 	//  }
 	//}
 	//
-	//
+	//void
+	//	FootstepPlanner::goalPoseCallback(
+	//		std::string yamlPath, std::string fileName)
+	//{
+	//	// update the goal states in the environment
+	//	if (setGoal(goal_pose))
+	//	{
+	//		if (ivStartPoseSetUp)
+	//		{
+	//			// force planning from scratch when backwards direction
+	//			plan(!ivEnvironmentParams.forward_search);
+	//		}
+	//	}
+	//}
 	//void
 	//FootstepPlanner::startPoseCallback(
 	//    const geometry_msgs::PoseWithCovarianceStampedConstPtr& start_pose)
@@ -635,6 +647,7 @@ namespace footstep_planner
 	//    plan(false);
 	//  }
 	//}
+	//
 
 	//
 	//bool
@@ -646,35 +659,35 @@ namespace footstep_planner
 	//}
 	//
 	//
-	//bool
-	//FootstepPlanner::setGoal(float x, float y, float theta)
-	//{
-	//  if (!ivMapPtr)
-	//  {
-	//    PRINT_ERROR("Distance map hasn't been initialized yet.");
-	//    return false;
-	//  }
-	//
-	//  State goal(x, y, theta, NOLEG);
-	//  State foot_left = getFootPose(goal, LEFT);
-	//  State foot_right = getFootPose(goal, RIGHT);
-	//
-	//  if (ivPlannerEnvironmentPtr->occupied(foot_left) ||
-	//      ivPlannerEnvironmentPtr->occupied(foot_right))
-	//  {
-	//    PRINT_ERROR("Goal pose at (%f %f %f) not accessible.", x, y, theta);
-	//    ivGoalPoseSetUp = false;
-	//    return false;
-	//  }
-	//  ivGoalFootLeft = foot_left;
-	//  ivGoalFootRight = foot_right;
-	//
-	//  ivGoalPoseSetUp = true;
-	//  PRINT_INFO("Goal pose set to (%f %f %f)", x, y, theta);
-	//
-	//  return true;
-	//}
-	//
+	bool
+	FootstepPlanner::setGoal(float x, float y, float theta)
+	{
+	  if (!ivMapPtr)
+	  {
+	    PRINT_ERROR("Distance map hasn't been initialized yet.");
+	    return false;
+	  }
+	
+	  State goal(x, y, theta, NOLEG);
+	  State foot_left = getFootPose(goal, LEFT);
+	  State foot_right = getFootPose(goal, RIGHT);
+	
+	  if (ivPlannerEnvironmentPtr->occupied(foot_left) ||
+	      ivPlannerEnvironmentPtr->occupied(foot_right))
+	  {
+	    PRINT_ERROR("Goal pose at (%f %f %f) not accessible.", x, y, theta);
+	    ivGoalPoseSetUp = false;
+	    return false;
+	  }
+	  ivGoalFootLeft = foot_left;
+	  ivGoalFootRight = foot_right;
+	
+	  ivGoalPoseSetUp = true;
+	  PRINT_INFO("Goal pose set to (%f %f %f)", x, y, theta);
+	
+	  return true;
+	}
+	
 	//bool
 	//FootstepPlanner::setGoal(const State& left_foot, const State& right_foot)
 	//{
@@ -700,91 +713,100 @@ namespace footstep_planner
 	//                  start_pose->pose.position.y,
 	//                  tf::getYaw(start_pose->pose.orientation));
 	//}
-	//
-	//
-	//bool
-	//FootstepPlanner::setStart(const State& left_foot, const State& right_foot)
-	//{
-	//  if (ivPlannerEnvironmentPtr->occupied(left_foot) ||
-	//      ivPlannerEnvironmentPtr->occupied(right_foot))
-	//  {
-	//    ivStartPoseSetUp = false;
-	//    return false;
-	//  }
-	//  ivStartFootLeft = left_foot;
-	//  ivStartFootRight = right_foot;
-	//
-	//  ivStartPoseSetUp = true;
-	//
-	//  return true;
-	//}
-	//
-	//
-	//bool
-	//FootstepPlanner::setStart(float x, float y, float theta)
-	//{
-	//  if (!ivMapPtr)
-	//  {
-	//    PRINT_ERROR("Distance map hasn't been initialized yet.");
-	//    return false;
-	//  }
-	//
-	//  State start(x, y, theta, NOLEG);
-	//  State foot_left = getFootPose(start, LEFT);
-	//  State foot_right = getFootPose(start, RIGHT);
-	//
-	//  bool success = setStart(foot_left, foot_right);
-	//  if (success)
-	//    PRINT_INFO("Start pose set to (%f %f %f)", x, y, theta);
-	//  else
-	//    PRINT_ERROR("Start pose (%f %f %f) not accessible.", x, y, theta);
-	//
-	//  // publish visualization:
-	//  geometry_msgs::PoseStamped start_pose;
-	//  start_pose.pose.position.x = x;
-	//  start_pose.pose.position.y = y;
-	//  start_pose.pose.position.z = 0.025;
-	//  start_pose.pose.orientation = tf::createQuaternionMsgFromYaw(theta);
-	//  start_pose.header.frame_id = ivMapPtr->getFrameID();
-	//  start_pose.header.stamp = ros::Time::now();
-	//  ivStartPoseVisPub.publish(start_pose);
-	//
-	//  return success;
-	//}
+	
+	
+	bool
+	FootstepPlanner::setStart(const State& left_foot, const State& right_foot)
+	{
+	  if (ivPlannerEnvironmentPtr->occupied(left_foot) ||
+	      ivPlannerEnvironmentPtr->occupied(right_foot))
+	  {
+	    ivStartPoseSetUp = false;
+	    return false;
+	  }
+	  ivStartFootLeft = left_foot;
+	  ivStartFootRight = right_foot;
+	
+	  ivStartPoseSetUp = true;
+	
+	  return true;
+	}
+	
+	
+	bool
+	FootstepPlanner::setStart(float x, float y, float theta)
+	{
+	  if (!ivMapPtr)
+	  {
+	    PRINT_ERROR("Distance map hasn't been initialized yet.");
+	    return false;
+	  }
+	
+	  State start(x, y, theta, NOLEG);
+	  State foot_left = getFootPose(start, LEFT);
+	  State foot_right = getFootPose(start, RIGHT);
+	
+	  bool success = setStart(foot_left, foot_right);
+	  if (success)
+	    PRINT_INFO("Start pose set to (%f %f %f)", x, y, theta);
+	  else
+	    PRINT_ERROR("Start pose (%f %f %f) not accessible.", x, y, theta);
+	
+	  // publish visualization:
+	  //geometry_msgs::PoseStamped start_pose;
+	  //start_pose.pose.position.x = x;
+	  //start_pose.pose.position.y = y;
+	  //start_pose.pose.position.z = 0.025;
+	  //start_pose.pose.orientation = tf::createQuaternionMsgFromYaw(theta);
+	  //start_pose.header.frame_id = ivMapPtr->getFrameID();
+	  //start_pose.header.stamp = ros::Time::now();
+	  //ivStartPoseVisPub.publish(start_pose);
+	
+	  return success;
+	}
+
+	int FootstepPlanner::LoadMap(std::string mapfile)
+	{
+		GridMap2DPtr map(new GridMap2D(mapfile, 0));
+		int r=map->LoadMap(mapfile, 0);
+		if (r == -1)
+			return r;
+		r=updateMap(map);
+		return r;
+	}
+
+	bool
+	FootstepPlanner::updateMap(const GridMap2DPtr map)
+	{
+	  // store old map pointer locally
+	  GridMap2DPtr old_map = ivMapPtr;
+	  // store new map
+	  ivMapPtr.reset();
+	  ivMapPtr = map;
+	
+	  // check if a previous map and a path existed
+	  if (old_map && (bool)ivPath.size())
+	  {
+	    updateEnvironment(old_map);
+	    return true;
+	  }
+	
+	  // ..otherwise the environment's map can simply be updated
+	  ivPlannerEnvironmentPtr->updateMap(map);
+	  return false;
+	}
 
 
-	//bool
-	//FootstepPlanner::updateMap(const GridMap2DPtr map)
-	//{
-	//  // store old map pointer locally
-	//  GridMap2DPtr old_map = ivMapPtr;
-	//  // store new map
-	//  ivMapPtr.reset();
-	//  ivMapPtr = map;
-	//
-	//  // check if a previous map and a path existed
-	//  if (old_map && (bool)ivPath.size())
-	//  {
-	//    updateEnvironment(old_map);
-	//    return true;
-	//  }
-	//
-	//  // ..otherwise the environment's map can simply be updated
-	//  ivPlannerEnvironmentPtr->updateMap(map);
-	//  return false;
-	//}
-
-
-	//void
-	//FootstepPlanner::updateEnvironment(const GridMap2DPtr old_map)
-	//{
-	//  PRINT_INFO("Reseting the planning environment.");
-	//  // reset environment
-	//  resetTotally();
-	//  // set the new map
-	//  ivPlannerEnvironmentPtr->updateMap(ivMapPtr);
-	//
-	//
+	void
+	FootstepPlanner::updateEnvironment(const GridMap2DPtr old_map)
+	{
+	  PRINT_INFO("Reseting the planning environment.");
+	  // reset environment
+	  resetTotally();
+	  // set the new map
+	  ivPlannerEnvironmentPtr->updateMap(ivMapPtr);
+	
+	
 	  // The following is not used any more
 
 	  // Replanning based on old planning info currently disabled
@@ -888,8 +910,101 @@ namespace footstep_planner
 	  //            setPlanner();
 	  //            //ivPlannerPtr->force_planning_from_scratch();
 	  //        }
-	//}
+	}
 
+	int StartGoalInfo::getGoal(std::string fileName)
+	{
+		cv::FileStorage fs_param;
+		fs_param.open(fileName, cv::FileStorage::READ);
+		if (!fs_param.isOpened())
+		{
+			std::cout << fileName << ": No file!" << std::endl;
+			return -1;
+		}
+
+		position.x = fs_param["pose"]["position"]["x"];
+		position.y = fs_param["pose"]["position"]["y"];
+		position.z = fs_param["pose"]["position"]["z"];
+
+		orientation.x = fs_param["pose"]["orientation"]["x"];
+		orientation.y = fs_param["pose"]["orientation"]["y"];
+		orientation.z = fs_param["pose"]["orientation"]["z"];
+		orientation.w = fs_param["pose"]["orientation"]["w"];
+		//cout << orientation.w << endl << endl;
+
+		frame_id = fs_param["header"]["frame_id"];
+
+		theta = tf::getYaw(orientation.x, orientation.y, orientation.z, orientation.w);
+		//static inline double getYaw(const tfScalar& x, const tfScalar& y, const tfScalar& z, const tfScalar& w)
+		fs_param.release();
+		return 1;
+	};
+
+	int StartGoalInfo::getStart(std::string fileName)
+	{
+		cv::FileStorage fs_param;
+		fs_param.open(fileName, cv::FileStorage::READ);
+		if (!fs_param.isOpened())
+		{
+			std::cout << fileName << ": No file!" << std::endl;
+			return -1;
+		}
+
+		position.x = fs_param["pose"]["pose"]["position"]["x"];
+		position.y = fs_param["pose"]["pose"]["position"]["y"];
+		position.z = fs_param["pose"]["pose"]["position"]["z"];
+
+		orientation.x = fs_param["pose"]["pose"]["orientation"]["x"];
+		orientation.y = fs_param["pose"]["pose"]["orientation"]["y"];
+		orientation.z = fs_param["pose"]["pose"]["orientation"]["z"];
+		orientation.w = fs_param["pose"]["pose"]["orientation"]["w"];
+		//cout << orientation.w << endl << endl;
+
+		frame_id = fs_param["header"]["frame_id"];
+
+		theta = tf::getYaw(orientation.x, orientation.y, orientation.z, orientation.w);
+		//static inline double getYaw(const tfScalar& x, const tfScalar& y, const tfScalar& z, const tfScalar& w)
+		fs_param.release();
+		return 1;
+	};
+
+	void FootstepPlanner::LoadStartPose(string filepath)
+	{
+		StartGoalInfo startInfo;
+		startInfo.getStart(filepath);
+		PRINT_INFO("Start pose set to (%f %f %f)\n", startInfo.position.x, startInfo.position.y, startInfo.theta);
+		oriInfo ori = startInfo.orientation;
+		if (setStart(startInfo.position.x,startInfo.position.y,
+			tf::getYaw(ori.x, ori.y, ori.z, ori.w)))
+		{
+			if (ivGoalPoseSetUp)
+			{
+				// force planning from scratch when forward direction
+				plan(ivEnvironmentParams.forward_search);
+			}
+		}
+
+	}
+
+	void FootstepPlanner::LoadGoalPose(string filepath)
+	{
+		StartGoalInfo goalInfo;
+		goalInfo.getGoal(filepath);
+		PRINT_INFO("Goal pose set to (%f %f %f)\n", goalInfo.position.x, goalInfo.position.y, goalInfo.theta);
+		// update the goal states in the environment
+		oriInfo ori = goalInfo.orientation;
+		bool status = setGoal(goalInfo.position.x,goalInfo.position.y,
+			tf::getYaw(ori.x, ori.y, ori.z, ori.w));
+		if (status)
+		{
+			if (ivStartPoseSetUp)
+			{
+				// force planning from scratch when backwards direction
+				plan(!ivEnvironmentParams.forward_search);
+			}
+		}
+
+	}
 
 	State
 		FootstepPlanner::getFootPose(const State& robot, Leg leg)
@@ -1148,4 +1263,5 @@ namespace footstep_planner
 	//}
 
 }
+
 
