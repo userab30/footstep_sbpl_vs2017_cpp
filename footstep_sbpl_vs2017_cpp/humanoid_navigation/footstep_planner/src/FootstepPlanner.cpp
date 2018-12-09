@@ -300,7 +300,7 @@ namespace footstep_planner
 		// set up SBPL
 		if (ivPlannerPtr->set_start(mdp_config.startstateid) == 0)
 		{
-			PRINT_ERROR("Failed to set start state.");
+			PRINT_ERROR("Failed to set start state.\n");
 			return false;
 		}
 		if (ivPlannerPtr->set_goal(mdp_config.goalstateid) == 0)
@@ -338,7 +338,7 @@ namespace footstep_planner
 
 			PRINT_INFO("Solution of size %zu found after %f s\n",
 				solution_state_ids.size(), //总共的步数
-				(clock() - startTime) / CLOCKS_PER_SEC); //.toSec()
+				(double)(clock() - startTime) / CLOCKS_PER_SEC); //.toSec()
 
 			if (true)//extractPath(solution_state_ids))
 			{
@@ -428,7 +428,7 @@ namespace footstep_planner
 	void
 		FootstepPlanner::reset()
 	{
-		PRINT_INFO("Resetting planner");
+		PRINT_INFO("Resetting planner\n");
 		// reset the previously calculated paths
 		ivPath.clear();
 		ivPlanningStatesIds.clear();
@@ -461,13 +461,13 @@ namespace footstep_planner
 	{
 		if (!ivMapPtr)
 		{
-			PRINT_ERROR("FootstepPlanner has no map for planning yet.");
+			PRINT_ERROR("FootstepPlanner has no map for planning yet.\n");
 			return false;
 		}
 		if (!ivGoalPoseSetUp || !ivStartPoseSetUp)
 		{
 			PRINT_ERROR("FootstepPlanner has not set the start and/or goal pose "
-				"yet.");
+				"yet.\n");
 			return false;
 		}
 
@@ -664,7 +664,7 @@ namespace footstep_planner
 	{
 	  if (!ivMapPtr)
 	  {
-	    PRINT_ERROR("Distance map hasn't been initialized yet.");
+	    PRINT_ERROR("Distance map hasn't been initialized yet.\n");
 	    return false;
 	  }
 	
@@ -675,7 +675,7 @@ namespace footstep_planner
 	  if (ivPlannerEnvironmentPtr->occupied(foot_left) ||
 	      ivPlannerEnvironmentPtr->occupied(foot_right))
 	  {
-	    PRINT_ERROR("Goal pose at (%f %f %f) not accessible.", x, y, theta);
+	    PRINT_ERROR("Goal pose at (%f %f %f) not accessible.\n", x, y, theta);
 	    ivGoalPoseSetUp = false;
 	    return false;
 	  }
@@ -683,7 +683,7 @@ namespace footstep_planner
 	  ivGoalFootRight = foot_right;
 	
 	  ivGoalPoseSetUp = true;
-	  PRINT_INFO("Goal pose set to (%f %f %f)", x, y, theta);
+	  PRINT_INFO("Goal pose set to (%f %f %f)\n", x, y, theta);
 	
 	  return true;
 	}
@@ -748,9 +748,9 @@ namespace footstep_planner
 	
 	  bool success = setStart(foot_left, foot_right);
 	  if (success)
-	    PRINT_INFO("Start pose set to (%f %f %f)", x, y, theta);
+	    PRINT_INFO("Start pose set to (%f %f %f)\n", x, y, theta);
 	  else
-	    PRINT_ERROR("Start pose (%f %f %f) not accessible.", x, y, theta);
+	    PRINT_ERROR("Start pose (%f %f %f) not accessible.\n", x, y, theta);
 	
 	  // publish visualization:
 	  //geometry_msgs::PoseStamped start_pose;

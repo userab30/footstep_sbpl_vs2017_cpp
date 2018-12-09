@@ -400,7 +400,7 @@ namespace footstep_planner
 		if (!ivHeuristicExpired)
 			return;
 
-		PRINT_INFO("Updating the heuristic values.");
+		PRINT_INFO("Updating the heuristic values.\n");
 
 		if (ivHeuristicConstPtr->getHeuristicType() == Heuristic::PATH_COST)
 		{
