@@ -34,6 +34,10 @@ int main(int argc, char** argv)
 		PRINT_INFO("no map file \n");
 		return r;
 	}
+	cv::Mat imagew_binaryMap = ivFootstepPlanner.watch_binaryMap;
+	cv::Mat imagew_distMap = ivFootstepPlanner.watch_distMap;
+
+	
 	ivFootstepPlanner.LoadStartPose(envPath + startName);
 	ivFootstepPlanner.LoadGoalPose(envPath + goalName);
 

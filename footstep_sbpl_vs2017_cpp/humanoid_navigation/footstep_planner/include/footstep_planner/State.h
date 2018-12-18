@@ -31,6 +31,7 @@ namespace footstep_planner
  * orientation) in the (continuous) world view. More precisely a state
  * points to the robot's supporting leg.
  */
+
 class State
 {
 public:

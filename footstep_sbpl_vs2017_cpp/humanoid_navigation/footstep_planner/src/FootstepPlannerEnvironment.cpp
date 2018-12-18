@@ -425,7 +425,7 @@ namespace footstep_planner
 			}
 		}
 
-		PRINT_DEBUG("Finished updating the heuristic values.");
+		PRINT_DEBUG("Finished updating the heuristic values.\n");
 		ivHeuristicExpired = false;
 	}
 

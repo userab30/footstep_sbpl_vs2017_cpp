@@ -36,7 +36,6 @@
 #include <opencv2/imgproc/imgproc.hpp>
 //#include <nav_msgs/OccupancyGrid.h>
 
-//#include "advise_input/footstep_datatype.h"
 #include <footstep_planner/helper.h>
 #include <boost/shared_ptr.hpp>
 #include <opencv2/opencv.hpp>
@@ -99,6 +98,7 @@ public:
   //GridMap2D(const nav_msgs::OccupancyGridConstPtr& grid_map, bool unknown_as_obstacle = false);
   GridMap2D(std::string fileName, bool unknown_as_obstacle);
   int LoadMap(std::string fileName, bool unknown_as_obstacle);
+  //int BezierMap(footstep_planner::Point2DTheta *sOutPoint, int outPointNum);
   //int getMap(bool unknown_as_obstacle, std::string yamlPath, std::string fileName);
   ///@brief Copy constructor, performs a deep copy of underlying data structures
   GridMap2D(const GridMap2D& other);
@@ -186,11 +186,12 @@ public:
   const static uchar FREE = 255;  ///< char value for "free": 255
   const static uchar OCCUPIED = 0; ///< char value for "free": 0
 
-  
+  cv::Mat m_binaryMap;	///< binary occupancy map. 255: free, 0 occupied.
+  cv::Mat m_distMap;
+
+  cv::Mat bezierMap;
 
 protected:
-  cv::Mat m_binaryMap;	///< binary occupancy map. 255: free, 0 occupied.
-  cv::Mat m_distMap;		///< distance map (in meter)
   //nav_msgs::MapMetaData m_mapInfo;
   MapInfo m_mapInfo;
   std::string m_frameId;	///< "map" frame where ROS OccupancyGrid originated from

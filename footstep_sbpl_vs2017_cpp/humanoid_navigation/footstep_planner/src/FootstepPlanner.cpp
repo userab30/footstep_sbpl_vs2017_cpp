@@ -668,6 +668,10 @@ namespace footstep_planner
 	    return false;
 	  }
 	
+	  getBezierGoal2(x, y);
+	  getBezierGoal1(x - cos(theta), y - sin(theta));
+
+	
 	  State goal(x, y, theta, NOLEG);
 	  State foot_left = getFootPose(goal, LEFT);
 	  State foot_right = getFootPose(goal, RIGHT);
@@ -741,7 +745,11 @@ namespace footstep_planner
 	    PRINT_ERROR("Distance map hasn't been initialized yet.");
 	    return false;
 	  }
-	
+	  //ivBezierPtr->start1=
+	  getBezierStart1(x,y);
+	  getBezierStart2(x + cos(theta), y+ sin(theta));
+
+
 	  State start(x, y, theta, NOLEG);
 	  State foot_left = getFootPose(start, LEFT);
 	  State foot_right = getFootPose(start, RIGHT);
@@ -769,6 +777,8 @@ namespace footstep_planner
 	{
 		GridMap2DPtr map(new GridMap2D(mapfile, 0));
 		int r=map->LoadMap(mapfile, 0);
+		watch_binaryMap = map->m_binaryMap;
+		watch_distMap = map->m_distMap;
 		if (r == -1)
 			return r;
 		r=updateMap(map);
@@ -790,7 +800,6 @@ namespace footstep_planner
 	    updateEnvironment(old_map);
 	    return true;
 	  }
-	
 	  // ..otherwise the environment's map can simply be updated
 	  ivPlannerEnvironmentPtr->updateMap(map);
 	  return false;
@@ -807,109 +816,6 @@ namespace footstep_planner
 	  ivPlannerEnvironmentPtr->updateMap(ivMapPtr);
 	
 	
-	  // The following is not used any more
-
-	  // Replanning based on old planning info currently disabled
-	  //        // TODO: handle size changes of the map; currently the planning
-	  //        // information is reseted
-	  //
-	  //        if (ivPlannerType == "ADPlanner" &&
-	  //            ivMapPtr->getResolution() == old_map->getResolution() &&
-	  //            ivMapPtr->size().height == old_map->size().height &&
-	  //            ivMapPtr->size().width == old_map->size().width)
-	  //        {
-	  //            PRINT_INFO("Received an updated map => change detection");
-	  //
-	  //            std::vector<State2> changed_states;
-	  //            cv::Mat changed_cells;
-	  //
-	  //            // get new occupied cells only (0: occupied in binary map)
-	  //            // changedCells(x,y) = old(x,y) AND NOT(new(x,y))
-	  ////          cv::bitwise_not(gridMap->binaryMap(), changedCells);
-	  ////          cv::bitwise_and(ivMapPtr->binaryMap(), changedCells, changedCells);
-	  //
-	  //            // to get all changed cells (new free and occupied) use XOR:
-	  //            cv::bitwise_xor(old_map->binaryMap(), ivMapPtr->binaryMap(),
-	  //                            changed_cells);
-	  //
-	  //            //inflate by outer foot radius:
-	  //            cv::bitwise_not(changed_cells, changed_cells); // invert for distanceTransform
-	  //            cv::Mat changedDistMap = cv::Mat(changed_cells.size(), CV_32FC1);
-	  //            cv::distanceTransform(changed_cells, changedDistMap,
-	  //                                  CV_DIST_L2, CV_DIST_MASK_PRECISE);
-	  //            double max_foot_radius = sqrt(
-	  //                    pow(std::abs(ivOriginFootShiftX) + ivFootsizeX / 2.0, 2.0) +
-	  //                    pow(std::abs(ivOriginFootShiftY) + ivFootsizeY / 2.0, 2.0))
-	  //                    / ivMapPtr->getResolution();
-	  //            changed_cells = (changedDistMap <= max_foot_radius); // threshold, also invert back
-	  //
-	  //            // loop over changed cells (now marked with 255 in the mask):
-	  //            unsigned int num_changed_cells = 0;
-	  //            double wx, wy;
-	  //            State2 s;
-	  //            for (int y = 0; y < changed_cells.rows; ++y)
-	  //            {
-	  //                for (int x = 0; x < changed_cells.cols; ++x)
-	  //                {
-	  //                    if (changed_cells.at<uchar>(x,y) == 255)
-	  //                    {
-	  //                        ++num_changed_cells;
-	  //                        ivMapPtr->mapToWorld(x, y, wx, wy);
-	  //                        s.setX(wx);
-	  //                        s.setY(wy);
-	  //                        // on each grid cell ivNumAngleBins-many planning states
-	  //                        // can be placed (if the resolution of the grid cells is
-	  //                        // the same as of the planning state grid)
-	  //                        for (int theta = 0; theta < ivNumAngleBins; ++theta)
-	  //                        {
-	  //                            s.setTheta(angle_cell_2_state(theta, ivNumAngleBins));
-	  //                            changed_states.push_back(s);
-	  //                        }
-	  //                    }
-	  //                }
-	  //            }
-	  //
-	  //            if (num_changed_cells == 0)
-	  //            {
-	  //                PRINT_INFO("old map equals new map; no replanning necessary");
-	  //                return;
-	  //            }
-	  //
-	  //            PRINT_INFO("%d changed map cells found", num_changed_cells);
-	  //            if (num_changed_cells <= ivChangedCellsLimit)
-	  //            {
-	  //                // update planer
-	  //                PRINT_INFO("Use old information in new planning taks");
-	  //
-	  //                std::vector<int> neighbour_ids;
-	  //                if (ivForwardSearch)
-	  //                    ivPlannerEnvironmentPtr->getSuccsOfGridCells(
-	  //                            changed_states, &neighbour_ids);
-	  //                else
-	  //                    ivPlannerEnvironmentPtr->getPredsOfGridCells(
-	  //                            changed_states, &neighbour_ids);
-	  //
-	  //                boost::shared_ptr<ADPlanner> h =
-	  //                        boost::dynamic_pointer_cast<ADPlanner>(ivPlannerPtr);
-	  //                h->costs_changed(PlanningStateChangeQuery(neighbour_ids));
-	  //            }
-	  //            else
-	  //            {
-	  //                PRINT_INFO("Reset old information in new planning task");
-	  //                // reset planner
-	  //                ivPlannerEnvironmentPtr->reset();
-	  //                setPlanner();
-	  //                //ivPlannerPtr->force_planning_from_scratch();
-	  //            }
-	  //        }
-	  //        else
-	  //        {
-	  //            PRINT_INFO("Reset old information in new planning task");
-	  //            // reset planner
-	  //            ivPlannerEnvironmentPtr->reset();
-	  //            setPlanner();
-	  //            //ivPlannerPtr->force_planning_from_scratch();
-	  //        }
 	}
 
 	int StartGoalInfo::getGoal(std::string fileName)
@@ -973,6 +879,8 @@ namespace footstep_planner
 		StartGoalInfo startInfo;
 		startInfo.getStart(filepath);
 		
+		//BezierInfo BezierPara;
+
 		oriInfo ori = startInfo.orientation;
 		if (setStart(startInfo.position.x,startInfo.position.y,
 			tf::getYaw(ori.x, ori.y, ori.z, ori.w)))
@@ -997,6 +905,7 @@ namespace footstep_planner
 			tf::getYaw(ori.x, ori.y, ori.z, ori.w));
 		if (status)
 		{
+			//updateBezierMap()
 			if (ivStartPoseSetUp)
 			{
 				// force planning from scratch when backwards direction
@@ -1036,7 +945,89 @@ namespace footstep_planner
 		return unequal;
 	}
 
+	float 
+		FootstepPlanner::Ni(int n, int i)
+	{
+		float ni;
+		ni = Factrl(n) / (Factrl(i)*Factrl(n - i));
+		return ni;
+	}
 
+	// function to calculate the Bernstein basis
+	float 
+		FootstepPlanner::Basis(int n, int i, float t)
+	{
+		float basis;
+		float ti; /* this is t^i */
+		float tni; /* this is (1 - t)^i */
+
+		/* handle the special cases to avoid domain problem with pow */
+
+		if (t == 0. && i == 0)
+			ti = 1.0;
+		else
+			ti = pow(t, i);
+
+		if (n == i && t == 1.)
+			tni = 1.0;
+		else
+			tni = pow((1 - t), (n - i));
+		basis = Ni(n, i)*ti*tni; /* calculate Bernstein basis function */
+		return basis;
+	}
+
+	// Bezier curve subroutine
+	int 
+		FootstepPlanner::Bezier(Point2DTheta *sPoint, int inPointNum, Point2DTheta *sOutPoint, int outPointNum)
+	{
+
+		float step;
+		float t;
+
+		/*    calculate the points on the Bezier curve */
+		t = 0;
+		step = 1.0f / ((float)(outPointNum - 1));
+
+		for (int i1 = 0; i1 < outPointNum; i1++) /* main loop */
+		{
+			if ((1.0 - t) < 5e-6)
+			{
+				t = 1.0;
+			}
+
+			sOutPoint[i1].x = 0.0;
+			sOutPoint[i1].y = 0.0;
+		
+			for (int posi = 0; posi < inPointNum; posi++) /* Do x,y,z components */
+			{
+				sOutPoint[i1].x = sOutPoint[i1].x + Basis(inPointNum - 1, posi, t)*sPoint[posi].x;
+				sOutPoint[i1].y = sOutPoint[i1].y + Basis(inPointNum - 1, posi, t)*sPoint[posi].y;
+			}
+			t = t + step;
+		}
+
+		return 0;
+	}
+	int FootstepPlanner::updateBezierMap()
+	{
+		//(Point2DTheta *sPoint, int inPointNum, Point2DTheta *sOutPoint, int outPointNum);
+		PRINT_INFO("Bezier F1 is (%f %f).\n", sPoint[0].x, sPoint[0].y);
+		PRINT_INFO("Bezier F2 is(%f %f).\n", sPoint[1].x, sPoint[1].y);
+		PRINT_INFO("Bezier F3 is (%f %f).\n", sPoint[2].x, sPoint[2].y);
+		PRINT_INFO("Bezier F4 is (%f %f).\n", sPoint[3].x, sPoint[3].y);
+
+		int x_diff = abs(state_2_cell(sPoint[0].x, ivEnvironmentParams.cell_size) - state_2_cell(sPoint[3].x, ivEnvironmentParams.cell_size));
+		int y_diff = abs(state_2_cell(sPoint[0].y, ivEnvironmentParams.cell_size) - state_2_cell(sPoint[3].y, ivEnvironmentParams.cell_size));
+		// max = (a >= b && a >= c) ? a : (b >= a && b >= c) ? b : c;
+		int outPointNum = x_diff > y_diff ? x_diff : y_diff;
+
+		Point2DTheta sOutPoint[400]; //最大点数为图的weight height
+		Bezier(sPoint, 4, sOutPoint, outPointNum);
+
+		return 0;
+
+	}
+	
 	//void
 	//FootstepPlanner::clearFootstepPathVis(unsigned num_footsteps)
 	//{

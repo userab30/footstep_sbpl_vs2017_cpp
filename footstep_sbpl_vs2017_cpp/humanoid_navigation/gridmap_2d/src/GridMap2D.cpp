@@ -63,7 +63,11 @@ namespace gridmap_2d {
 		// distance map now contains distance in meters:
 		m_distMap = m_distMap * m_mapInfo.resolution;
 	}
+	//int
+	//	GridMap2D::BezierMap(footstep_planner::Point2DTheta *sOutPoint, int outPointNum)	 
+	//{
 
+	//}
 	int GridMap2D::LoadMap(std::string fileName, bool unknown_as_obstacle)
 	{
 		cv::FileStorage fs_param;
@@ -121,6 +125,7 @@ namespace gridmap_2d {
 
 		//////-------------------------flag------------------------------/////
 		updateDistanceMap();
+
 		PRINT_INFO("GridMap2D created with %d x %d cells at %f resolution.\n", m_mapInfo.width, m_mapInfo.height, m_mapInfo.resolution);
 
 		typedef boost::shared_ptr<GridMap2D> GridMap2DPtr;

@@ -255,8 +255,9 @@ void ARAPlanner::UpdatePreds(ARAState* state, ARASearchStateSpace_t* pSearchStat
     CKey key;
     ARAState *predstate;
 
-    environment_->GetPreds(state->MDPstate->StateID, &PredIDV, &CostV);
+	//从目标goal处开始往前pred搜索，PredIDV为扩展的14个可选脚印, &CostV为14个相应脚印的cost
 
+    environment_->GetPreds(state->MDPstate->StateID, &PredIDV, &CostV);
     //iterate through predecessors of s
     for (int pind = 0; pind < (int)PredIDV.size(); pind++) {
         CMDPSTATE* PredMDPState = GetState(PredIDV[pind], pSearchStateSpace);
@@ -367,15 +368,21 @@ int ARAPlanner::ImprovePath(ARASearchStateSpace_t* pSearchStateSpace, double Max
     //goalkey.key[1] = searchgoalstate->h;
 
     //expand states until done
-    minkey = pSearchStateSpace->heap->getminkeyheap();
+    minkey = pSearchStateSpace->heap->getminkeyheap(); //start
     CKey oldkey = minkey;
+	//int count = 0;
     while (!pSearchStateSpace->heap->emptyheap() && minkey.key[0] < INFINITECOST && goalkey > minkey &&
            (clock() - TimeStarted) < MaxNumofSecs * (double)CLOCKS_PER_SEC &&
                (pSearchStateSpace->eps_satisfied == INFINITECOST ||
                (clock() - TimeStarted) < repair_time * (double)CLOCKS_PER_SEC))
     {
         //get the state
-        state = (ARAState*)pSearchStateSpace->heap->deleteminheap();
+        state = (ARAState*)pSearchStateSpace->heap->deleteminheap(); //goal
+		//count += 1;
+		//if (count == 76)
+		//{
+		//	count = 0;
+		//}
 
 #if DEBUG
         SBPL_FPRINTF(fDeb, "expanding state(%d): h=%d g=%u key=%u v=%u iterc=%d callnuma=%d expands=%d (g(goal)=%u)\n",
@@ -598,14 +605,14 @@ void ARAPlanner::ReInitializeSearchStateSpace(ARASearchStateSpace_t* pSearchStat
     //initialize start state
     ARAState* startstateinfo = (ARAState*)(pSearchStateSpace->searchstartstate->PlannerSpecificData);
     if (startstateinfo->callnumberaccessed != pSearchStateSpace->callnumber) {
-        ReInitializeSearchStateInfo(startstateinfo, pSearchStateSpace);
+        ReInitializeSearchStateInfo(startstateinfo, pSearchStateSpace); //h=2066 from start -> goal
     }
     startstateinfo->g = 0;
 
     //initialize goal state
     ARAState* searchgoalstate = (ARAState*)(pSearchStateSpace->searchgoalstate->PlannerSpecificData);
     if (searchgoalstate->callnumberaccessed != pSearchStateSpace->callnumber) {
-        ReInitializeSearchStateInfo(searchgoalstate, pSearchStateSpace);
+        ReInitializeSearchStateInfo(searchgoalstate, pSearchStateSpace); //h=0 from goal -> goal
     }
 
     //insert start state into the heap
@@ -913,6 +920,7 @@ bool ARAPlanner::Search(ARASearchStateSpace_t* pSearchStateSpace, vector<int>& p
         Reevaluatehvals(pSearchStateSpace);
     }
 
+	//计算开始和目标处的H值： start: g=0,h=2066,eps=8   goal: g=10000000,h=0,eps=8
     if (pSearchStateSpace->bReinitializeSearchStateSpace) {
         //re-initialize state space
         ReInitializeSearchStateSpace(pSearchStateSpace);
@@ -1075,7 +1083,7 @@ int ARAPlanner::replan(double allocated_time_secs, vector<int>* solution_stateID
     SBPL_PRINTF("planner: replan called (bFirstSol=%d, bOptSol=%d)\n", bFirstSolution, bOptimalSolution);
 
     //plan
-    bFound = Search(pSearchStateSpace_, pathIds, PathCost, bFirstSolution, bOptimalSolution, allocated_time_secs);
+    bFound = Search(pSearchStateSpace_, pathIds, PathCost, bFirstSolution, bOptimalSolution, allocated_time_secs);//6000
     if (!bFound)
     {
         SBPL_PRINTF("failed to find a solution\n");

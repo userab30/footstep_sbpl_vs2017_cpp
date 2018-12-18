@@ -49,6 +49,7 @@
 //#include "advise_input/footstep_datatype.h"
 #include <boost/shared_ptr.hpp>
 #include "tf/transform_datatypes.h"
+
 using namespace std;
 
 namespace footstep_planner
@@ -80,6 +81,15 @@ class StartGoalInfo {
 		int getStart(std::string fileName);
 
 	};
+struct Point2DTheta {
+	Point2DTheta()
+	{
+		x = 0.0;
+		y = 0.0;
+	}
+	float x;
+	float y;
+};
 
 typedef std::vector<State>::const_iterator state_iter_t;
 
@@ -261,6 +271,12 @@ public:
   environment_params ivEnvironmentParams;
 
 
+  cv::Mat watch_binaryMap;
+  cv::Mat watch_distMap;
+  
+
+
+
 protected:
   //void broadcastExpandedNodesVis();
   //void broadcastRandomNodesVis();
@@ -311,6 +327,9 @@ protected:
 
   boost::shared_ptr<const PathCostHeuristic> ivPathCostHeuristicPtr;
 
+  //boost::shared_ptr<BezierInfo> ivBezierPtr;
+
+
   std::vector<State> ivPath;
 
   State ivStartFootLeft;
@@ -349,7 +368,54 @@ protected:
   std::string ivMarkerNamespace;
 
   std::vector<int> ivPlanningStatesIds;
+
+  Point2DTheta sPoint[4];
+
+  //Point2DTheta start1; //F1
+  //Point2DTheta start2; //F2
+  //Point2DTheta goal1;  //F3
+  //Point2DTheta goal2;  //F4
+
+  void getBezierStart1(float x, float y)
+  {
+	  sPoint[0].x = x;
+	  sPoint[0].y = y;
+  }
+  void getBezierStart2(float x, float y)
+  {
+	  sPoint[1].x = x;
+	  sPoint[1].y = y;
+  }
+  void getBezierGoal1(float x, float y)
+  {
+	  sPoint[2].x = x;
+	  sPoint[2].y = y;
+  }
+  void getBezierGoal2(float x, float y)
+  {
+	  sPoint[3].x = x;
+	  sPoint[3].y = y;
+  }
+  float Factrl(int number)
+  {
+	  if (number <= 1)
+		  return 1;
+	  else
+		  return number * Factrl(number - 1);
+  };
+
+  // function to calculate the factorial function for Bernstein basis
+  float Ni(int, int);
+
+  // function to calculate the Bernstein basis
+  float Basis(int, int, float);
+
+  // Bezier curve subroutine
+  int Bezier(Point2DTheta *sPoint, int inPointNum, Point2DTheta *sOutPoint, int outPointNum);
+
+  int updateBezierMap();
 };
+
 
 }
 
