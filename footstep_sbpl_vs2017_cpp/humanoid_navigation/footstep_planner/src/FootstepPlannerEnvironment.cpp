@@ -272,7 +272,36 @@ namespace footstep_planner
 			ivHashTableSize));
 	}
 
+	bool
+		FootstepPlannerEnvironment::occupiedStartGoal(const State& s)
+	{
+		return occupiedStartGoal(PlanningState(s, ivCellSize, ivNumAngleBins,
+			ivHashTableSize));
+	}
+	bool
+		FootstepPlannerEnvironment::occupiedStartGoal(const PlanningState& s)
+	{
+		double x = cell_2_state(s.getX(), ivCellSize);
+		double y = cell_2_state(s.getY(), ivCellSize);
+		// collision check for the planning state
+		if (ivMapPtr->isOccupiedAtStartGoal(x, y))
+			return true;
+		double theta = angle_cell_2_state(s.getTheta(), ivNumAngleBins);
+		double theta_cos = cos(theta);
+		double theta_sin = sin(theta);
 
+		// transform the planning state to the foot center
+		x += theta_cos * ivOriginFootShiftX - theta_sin * ivOriginFootShiftY;
+		if (s.getLeg() == LEFT)
+			y += theta_sin * ivOriginFootShiftX + theta_cos * ivOriginFootShiftY;
+		else // leg == RLEG
+			y += theta_sin * ivOriginFootShiftX - theta_cos * ivOriginFootShiftY;
+
+		// collision check for the foot center
+		////------------------------------------flag------------------------------------------////
+		//return true;
+		return collision_check_StartGoal(x, y, theta, ivFootsizeX, ivFootsizeY, ivCollisionCheckAccuracy, *ivMapPtr); //_StartGoal
+	}
 	bool
 		FootstepPlannerEnvironment::occupied(const PlanningState& s)
 	{
@@ -296,6 +325,62 @@ namespace footstep_planner
 		////------------------------------------flag------------------------------------------////
 		//return true;
 		return collision_check(x, y, theta, ivFootsizeX, ivFootsizeY,ivCollisionCheckAccuracy, *ivMapPtr);
+	}
+	bool
+		FootstepPlannerEnvironment::collision_check_StartGoal(double x, double y, double theta, double height,
+			double width, int accuracy,
+			gridmap_2d::GridMap2D & distance_map)
+	{
+		double d = distance_map.distanceMapAtStartGoal(x, y);
+		if (d < 0.0) // if out of bounds => collision
+			return true;
+		d -= distance_map.getResolution();
+
+		const double r_o = sqrt(width*width + height * height) / 2.0;
+
+		if (d >= r_o)
+			return false;
+		else if (accuracy == 0)
+			return false;
+
+		const double h_half = height / 2.0;
+		const double w_half = width / 2.0;
+		const double r_i = std::min(w_half, h_half);
+
+		if (d <= r_i)
+			return true;
+		else if (accuracy == 1)
+			return true;
+
+		double h_new;
+		double w_new;
+		double delta_x;
+		double delta_y;
+		if (width < height)
+		{
+			const double h_clear = sqrt(d*d - w_half * w_half);
+			h_new = h_half - h_clear;
+			w_new = width;
+			delta_x = h_clear + h_new / 2.0;
+			delta_y = 0.0;
+		}
+		else // footWidth >= footHeight
+		{
+			const double w_clear = sqrt(d*d - h_half * h_half);
+			h_new = height;
+			w_new = w_half - w_clear;
+			delta_x = 0.0;
+			delta_y = w_clear + w_new / 2.0;
+		}
+		const double theta_cos = cos(theta);
+		const double theta_sin = sin(theta);
+		const double x_shift = theta_cos * delta_x - theta_sin * delta_y;
+		const double y_shift = theta_sin * delta_x + theta_cos * delta_y;
+
+		return (collision_check_StartGoal(x + x_shift, y + y_shift, theta, h_new, w_new,
+			accuracy, distance_map) ||
+			collision_check_StartGoal(x - x_shift, y - y_shift, theta, h_new, w_new,
+				accuracy, distance_map));
 	}
 
 	bool

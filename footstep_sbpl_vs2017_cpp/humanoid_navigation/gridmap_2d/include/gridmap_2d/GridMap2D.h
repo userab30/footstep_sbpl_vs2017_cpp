@@ -79,18 +79,16 @@ struct MapInfo {
 	int height;
 	originInfo origin;
 
-	//float origin_position_x;
-	//float origin_position_y;
-	//float origin_position_z;
-
-	//float origin_orientation_x;
-	//float origin_orientation_y;
-	//float origin_orientation_z;
-	//float origin_orientation_w;
-
-	//vector data;
 };
-
+struct Point2DTheta {
+	Point2DTheta()
+	{
+		x = 0.0;
+		y = 0.0;
+	}
+	float x;
+	float y;
+};
 class GridMap2D {
 public:
   GridMap2D();
@@ -137,6 +135,7 @@ public:
 
   /// Returns distance (in m) at world coordinates <wx,wy> in m; -1 if out of bounds!
   float distanceMapAt(double wx, double wy) const;
+  float distanceMapAtStartGoal(double wx, double wy) const;
 
   /// Returns distance (in m) at map cell <mx, my> in m; -1 if out of bounds!
   float distanceMapAtCell(unsigned int mx, unsigned int my) const;
@@ -153,9 +152,10 @@ public:
   /// @return true if map is occupied at world coordinate <wx, wy>. Out of bounds
   /// 		will be returned as occupied.
   bool isOccupiedAt(double wx, double wy) const;
+  bool isOccupiedAtStartGoal(double wx, double wy) const;
 
   /// @return true if map is occupied at cell <mx, my>
-  bool isOccupiedAtCell(unsigned int mx, unsigned int my) const;
+  bool isOccupiedAtCell(unsigned int mx, unsigned int my) const; 
 
   ///@brief Initialize map from a ROS OccupancyGrid message
   //void setMap(const nav_msgs::OccupancyGridConstPtr& grid_map, bool unknown_as_obstacle = false);
@@ -189,7 +189,56 @@ public:
   cv::Mat m_binaryMap;	///< binary occupancy map. 255: free, 0 occupied.
   cv::Mat m_distMap;
 
-  cv::Mat bezierMap;
+  cv::Mat bezier_binaryMap;
+  cv::Mat bezier_distMap;
+
+  //cv::Mat watch_bezier_binaryMap;
+  //cv::Mat watch_bezier_distMap;
+
+  Point2DTheta sPoint[4];
+
+  //Point2DTheta start1; //F1
+  //Point2DTheta start2; //F2
+  //Point2DTheta goal1;  //F3
+  //Point2DTheta goal2;  //F4
+
+  void getBezierF0(float x, float y)
+  {
+	  sPoint[0].x = x;
+	  sPoint[0].y = y;
+  }
+  void getBezierF1(float x, float y)
+  {
+	  sPoint[1].x = x;
+	  sPoint[1].y = y;
+  }
+  void getBezierF2(float x, float y)
+  {
+	  sPoint[2].x = x;
+	  sPoint[2].y = y;
+  }
+  void getBezierF3(float x, float y)
+  {
+	  sPoint[3].x = x;
+	  sPoint[3].y = y;
+  }
+  float Factrl(int number)
+  {
+	  if (number <= 1)
+		  return 1;
+	  else
+		  return number * Factrl(number - 1);
+  };
+
+  // function to calculate the factorial function for Bernstein basis
+  float Ni(int, int);
+
+  // function to calculate the Bernstein basis
+  float Basis(int, int, float);
+
+  // Bezier curve subroutine
+  int Bezier(Point2DTheta *sPoint, int inPointNum, Point2DTheta *sOutPoint, int outPointNum);
+  int updateBezierMap(std::pair<float, float> pointF0, std::pair<float, float> pointF1, std::pair<float, float> pointF2, std::pair<float, float> pointF3);
 
 protected:
   //nav_msgs::MapMetaData m_mapInfo;

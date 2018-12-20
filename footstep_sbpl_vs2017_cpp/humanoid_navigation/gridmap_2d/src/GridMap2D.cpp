@@ -209,12 +209,22 @@ namespace gridmap_2d {
 		unsigned mx, my;
 		return worldToMap(wx, wy, mx, my);
 	}
+	float GridMap2D::distanceMapAtStartGoal(double wx, double wy) const {
+		unsigned mx, my;
+
+		if (worldToMap(wx, wy, mx, my))
+			//return m_distMap.at<float>(mx, my);
+			return m_distMap.at<float>(mx, my);
+		else
+			return -1.0f;
+	}
 
 	float GridMap2D::distanceMapAt(double wx, double wy) const {
 		unsigned mx, my;
 
 		if (worldToMap(wx, wy, mx, my))
-			return m_distMap.at<float>(mx, my);
+			//return m_distMap.at<float>(mx, my);
+			return bezier_distMap.at<float>(mx, my);
 		else
 			return -1.0f;
 	}
@@ -244,9 +254,18 @@ namespace gridmap_2d {
 
 
 	bool GridMap2D::isOccupiedAtCell(unsigned int mx, unsigned int my) const {
-		return (m_binaryMap.at<uchar>(mx, my) < 255);
+		//return (m_binaryMap.at<uchar>(mx, my) < 255);
+		return (bezier_binaryMap.at<uchar>(mx, my) < 255);
 	}
 
+	bool GridMap2D::isOccupiedAtStartGoal(double wx, double wy) const {
+		unsigned mx, my;
+		if (worldToMap(wx, wy, mx, my))
+			//return isOccupiedAtCell(mx, my);
+			return (m_binaryMap.at<uchar>(mx, my) < 255);
+		else
+			return true;
+	}
 
 	bool GridMap2D::isOccupiedAt(double wx, double wy) const {
 		unsigned mx, my;
@@ -255,7 +274,116 @@ namespace gridmap_2d {
 		else
 			return true;
 	}
+	float
+		GridMap2D::Ni(int n, int i)
+	{
+		float ni;
+		ni = Factrl(n) / (Factrl(i)*Factrl(n - i));
+		return ni;
+	}
 
+	// function to calculate the Bernstein basis
+	float
+		GridMap2D::Basis(int n, int i, float t)
+	{
+		float basis;
+		float ti; /* this is t^i */
+		float tni; /* this is (1 - t)^i */
+
+		/* handle the special cases to avoid domain problem with pow */
+
+		if (t == 0. && i == 0)
+			ti = 1.0;
+		else
+			ti = pow(t, i);
+
+		if (n == i && t == 1.)
+			tni = 1.0;
+		else
+			tni = pow((1 - t), (n - i));
+		basis = Ni(n, i)*ti*tni; /* calculate Bernstein basis function */
+		return basis;
+	}
+
+	// Bezier curve subroutine
+	int
+		GridMap2D::Bezier(Point2DTheta *sPoint, int inPointNum, Point2DTheta *sOutPoint, int outPointNum)
+	{
+
+		float step;
+		float t;
+
+		/*    calculate the points on the Bezier curve */
+		t = 0;
+		step = 1.0f / ((float)(outPointNum - 1));
+
+		for (int i1 = 0; i1 < outPointNum; i1++) /* main loop */
+		{
+			if ((1.0 - t) < 5e-6)
+			{
+				t = 1.0;
+			}
+
+			sOutPoint[i1].x = 0.0;
+			sOutPoint[i1].y = 0.0;
+
+			for (int posi = 0; posi < inPointNum; posi++) /* Do x,y,z components */
+			{
+				sOutPoint[i1].x = sOutPoint[i1].x + Basis(inPointNum - 1, posi, t)*sPoint[posi].x;
+				sOutPoint[i1].y = sOutPoint[i1].y + Basis(inPointNum - 1, posi, t)*sPoint[posi].y;
+			}
+			t = t + step;
+		}
+
+		return 0;
+	}
+	int GridMap2D::updateBezierMap(std::pair<float, float> pointF0,std::pair<float, float> pointF1,std::pair<float, float> pointF2,std::pair<float, float> pointF3)
+	{
+		getBezierF0(pointF0.first, pointF0.second);
+		getBezierF1(pointF1.first, pointF1.second);
+		getBezierF2(pointF2.first, pointF2.second);
+		getBezierF3(pointF3.first, pointF3.second);
+		//(Point2DTheta *sPoint, int inPointNum, Point2DTheta *sOutPoint, int outPointNum);
+		PRINT_INFO("Bezier F1 is (%f %f).\n", sPoint[0].x, sPoint[0].y);
+		PRINT_INFO("Bezier F2 is(%f %f).\n", sPoint[1].x, sPoint[1].y);
+		PRINT_INFO("Bezier F3 is (%f %f).\n", sPoint[2].x, sPoint[2].y);
+		PRINT_INFO("Bezier F4 is (%f %f).\n", sPoint[3].x, sPoint[3].y);
+
+		int x_diff = abs(footstep_planner::state_2_cell(sPoint[0].x, m_mapInfo.resolution) - footstep_planner::state_2_cell(sPoint[3].x, m_mapInfo.resolution));
+		int y_diff = abs(footstep_planner::state_2_cell(sPoint[0].y, m_mapInfo.resolution) - footstep_planner::state_2_cell(sPoint[3].y, m_mapInfo.resolution));
+		// max = (a >= b && a >= c) ? a : (b >= a && b >= c) ? b : c;
+		int outPointNum = x_diff > y_diff ? 2*x_diff : 2*y_diff;
+
+		Point2DTheta sOutPoint[400]; //最大点数为图的weight height
+		Bezier(sPoint, 4, sOutPoint, outPointNum);
+
+		bezier_binaryMap = cv::Mat(m_mapInfo.width, m_mapInfo.height, CV_8UC1);
+		bezier_distMap = cv::Mat(m_binaryMap.size(), CV_32FC1);
+		for(unsigned int i=0;i<m_mapInfo.width;i++)
+			for (unsigned int j = 0; j < m_mapInfo.height; j++)
+			{
+				bezier_binaryMap.at<uchar>(i, j) = FREE;
+			}
+		for (unsigned int j = 0; j < outPointNum; j++) {
+			int x = footstep_planner::state_2_cell(sOutPoint[j].x, m_mapInfo.resolution);
+			int y = footstep_planner::state_2_cell(sOutPoint[j].y,m_mapInfo.resolution);
+			bezier_binaryMap.at<uchar>(x, y) = OCCUPIED;
+		}
+		cv::distanceTransform(bezier_binaryMap, bezier_distMap, CV_DIST_L2, CV_DIST_MASK_PRECISE);
+		bezier_distMap = bezier_distMap * m_mapInfo.resolution;
+
+		for (unsigned int i = 0; i < m_mapInfo.width; i++)
+			for (unsigned int j = 0; j < m_mapInfo.height; j++)
+			{
+				if (bezier_distMap.at<float>(i, j) <=0.20 and m_binaryMap.at<uchar>(i,j)==FREE) //脚宽度
+					bezier_binaryMap.at<uchar>(i, j) = FREE;
+				else bezier_binaryMap.at<uchar>(i, j) = OCCUPIED;
+			}
+		cv::distanceTransform(bezier_binaryMap, bezier_distMap, CV_DIST_L2, CV_DIST_MASK_PRECISE);
+		bezier_distMap = bezier_distMap * m_mapInfo.resolution;
+
+		return 0;
+	}
 }
 
 

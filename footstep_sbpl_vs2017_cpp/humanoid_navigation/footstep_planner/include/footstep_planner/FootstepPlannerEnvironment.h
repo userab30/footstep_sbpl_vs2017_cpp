@@ -152,7 +152,9 @@ public:
   bool collision_check(double x, double y, double theta,
 	  double height, double width, int accuracy,
 	  gridmap_2d::GridMap2D & distance_map);
-
+  bool collision_check_StartGoal(double x, double y, double theta, double height,
+	  double width, int accuracy,
+	  gridmap_2d::GridMap2D & distance_map);
   /**
    * @brief Update the robot's feet poses in the goal state.
    * @return The new IDs (left, right) of the planning state representing the
@@ -176,7 +178,7 @@ public:
    * obstacle.
    */
   bool occupied(const State& s);
-
+  bool occupiedStartGoal(const State& s);
   /**
    * @brief Try to receive a state with a certain ID.
    *
@@ -324,6 +326,8 @@ protected:
    * @return True iff the foot in 's' is colliding with an obstacle.
    */
   bool occupied(const PlanningState& s);
+  bool occupiedStartGoal(const PlanningState& s);
+
 
   void GetRandomNeighs(const PlanningState* currentState,
                        std::vector<int>* NeighIDV,

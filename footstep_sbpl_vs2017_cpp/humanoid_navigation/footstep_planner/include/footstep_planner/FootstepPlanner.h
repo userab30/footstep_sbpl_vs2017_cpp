@@ -81,15 +81,6 @@ class StartGoalInfo {
 		int getStart(std::string fileName);
 
 	};
-struct Point2DTheta {
-	Point2DTheta()
-	{
-		x = 0.0;
-		y = 0.0;
-	}
-	float x;
-	float y;
-};
 
 typedef std::vector<State>::const_iterator state_iter_t;
 
@@ -273,6 +264,9 @@ public:
 
   cv::Mat watch_binaryMap;
   cv::Mat watch_distMap;
+
+  cv::Mat watchBezier_binaryMap;
+  cv::Mat watchBezier_distMap;
   
 
 
@@ -369,51 +363,52 @@ protected:
 
   std::vector<int> ivPlanningStatesIds;
 
-  Point2DTheta sPoint[4];
 
-  //Point2DTheta start1; //F1
-  //Point2DTheta start2; //F2
-  //Point2DTheta goal1;  //F3
-  //Point2DTheta goal2;  //F4
+  //Point2DTheta sPoint[4];
 
-  void getBezierStart1(float x, float y)
-  {
-	  sPoint[0].x = x;
-	  sPoint[0].y = y;
-  }
-  void getBezierStart2(float x, float y)
-  {
-	  sPoint[1].x = x;
-	  sPoint[1].y = y;
-  }
-  void getBezierGoal1(float x, float y)
-  {
-	  sPoint[2].x = x;
-	  sPoint[2].y = y;
-  }
-  void getBezierGoal2(float x, float y)
-  {
-	  sPoint[3].x = x;
-	  sPoint[3].y = y;
-  }
-  float Factrl(int number)
-  {
-	  if (number <= 1)
-		  return 1;
-	  else
-		  return number * Factrl(number - 1);
-  };
+  std::pair<float, float> pointF0; //F1
+  std::pair<float, float> pointF1; //F2
+  std::pair<float, float> pointF2;  //F3
+  std::pair<float, float> pointF3;  //F4
 
-  // function to calculate the factorial function for Bernstein basis
-  float Ni(int, int);
+  //void getBezierStart1(float x, float y)
+  //{
+	 // sPoint[0].x = x;
+	 // sPoint[0].y = y;
+  //}
+  //void getBezierStart2(float x, float y)
+  //{
+	 // sPoint[1].x = x;
+	 // sPoint[1].y = y;
+  //}
+  //void getBezierGoal1(float x, float y)
+  //{
+	 // sPoint[2].x = x;
+	 // sPoint[2].y = y;
+  //}
+  //void getBezierGoal2(float x, float y)
+  //{
+	 // sPoint[3].x = x;
+	 // sPoint[3].y = y;
+  //}
+  //float Factrl(int number)
+  //{
+	 // if (number <= 1)
+		//  return 1;
+	 // else
+		//  return number * Factrl(number - 1);
+  //};
 
-  // function to calculate the Bernstein basis
-  float Basis(int, int, float);
+  //// function to calculate the factorial function for Bernstein basis
+  //float Ni(int, int);
 
-  // Bezier curve subroutine
-  int Bezier(Point2DTheta *sPoint, int inPointNum, Point2DTheta *sOutPoint, int outPointNum);
+  //// function to calculate the Bernstein basis
+  //float Basis(int, int, float);
 
-  int updateBezierMap();
+  //// Bezier curve subroutine
+  //int Bezier(Point2DTheta *sPoint, int inPointNum, Point2DTheta *sOutPoint, int outPointNum);
+
+  //int updateBezierMap();
 };
 
 

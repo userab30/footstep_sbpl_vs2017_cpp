@@ -34,10 +34,12 @@ int main(int argc, char** argv)
 		PRINT_INFO("no map file \n");
 		return r;
 	}
-	cv::Mat imagew_binaryMap = ivFootstepPlanner.watch_binaryMap;
-	cv::Mat imagew_distMap = ivFootstepPlanner.watch_distMap;
+	//使用image watch 观察地图map变量，需要打断点，然后add address to watch
+	cv::Mat imagem_binaryMap = ivFootstepPlanner.watch_binaryMap; //
+	cv::Mat imagem_distMap = ivFootstepPlanner.watch_distMap;
+	cv::Mat* imageb_binaryMap = &ivFootstepPlanner.watchBezier_binaryMap;
+	cv::Mat* imageb_distMap = &ivFootstepPlanner.watchBezier_distMap;
 
-	
 	ivFootstepPlanner.LoadStartPose(envPath + startName);
 	ivFootstepPlanner.LoadGoalPose(envPath + goalName);
 

@@ -668,16 +668,21 @@ namespace footstep_planner
 	    return false;
 	  }
 	
-	  getBezierGoal2(x, y);
-	  getBezierGoal1(x - cos(theta), y - sin(theta));
+	  //getBezierGoal2(x, y);
+	  //getBezierGoal1(x - cos(theta), y - sin(theta));
+	  pointF3.first = x;
+	  pointF3.second = y;
+
+	  pointF2.first = x - cos(theta);
+	  pointF2.second = y - sin(theta);
 
 	
 	  State goal(x, y, theta, NOLEG);
 	  State foot_left = getFootPose(goal, LEFT);
 	  State foot_right = getFootPose(goal, RIGHT);
 	
-	  if (ivPlannerEnvironmentPtr->occupied(foot_left) ||
-	      ivPlannerEnvironmentPtr->occupied(foot_right))
+	  if (ivPlannerEnvironmentPtr->occupiedStartGoal(foot_left) ||
+	      ivPlannerEnvironmentPtr->occupiedStartGoal(foot_right))
 	  {
 	    PRINT_ERROR("Goal pose at (%f %f %f) not accessible.\n", x, y, theta);
 	    ivGoalPoseSetUp = false;
@@ -722,8 +727,8 @@ namespace footstep_planner
 	bool
 	FootstepPlanner::setStart(const State& left_foot, const State& right_foot)
 	{
-	  if (ivPlannerEnvironmentPtr->occupied(left_foot) ||
-	      ivPlannerEnvironmentPtr->occupied(right_foot))
+	  if (ivPlannerEnvironmentPtr->occupiedStartGoal(left_foot) ||
+	      ivPlannerEnvironmentPtr->occupiedStartGoal(right_foot))
 	  {
 	    ivStartPoseSetUp = false;
 	    return false;
@@ -746,9 +751,12 @@ namespace footstep_planner
 	    return false;
 	  }
 	  //ivBezierPtr->start1=
-	  getBezierStart1(x,y);
-	  getBezierStart2(x + cos(theta), y+ sin(theta));
-
+	  //getBezierStart1(x,y);
+	  //getBezierStart2(x + cos(theta), y+ sin(theta));
+	  pointF0.first = x;
+	  pointF0.second = y;
+	  pointF1.first = x + cos(theta);
+	  pointF1.second = y + sin(theta);
 
 	  State start(x, y, theta, NOLEG);
 	  State foot_left = getFootPose(start, LEFT);
@@ -903,9 +911,12 @@ namespace footstep_planner
 		oriInfo ori = goalInfo.orientation;
 		bool status = setGoal(goalInfo.position.x,goalInfo.position.y,
 			tf::getYaw(ori.x, ori.y, ori.z, ori.w));
-		if (status)
+		
+		if (status) 
 		{
-			//updateBezierMap()
+			ivMapPtr->updateBezierMap(pointF0, pointF1, pointF2, pointF3);
+			watchBezier_binaryMap = ivMapPtr->bezier_binaryMap;
+			watchBezier_distMap = ivMapPtr->bezier_distMap;
 			if (ivStartPoseSetUp)
 			{
 				// force planning from scratch when backwards direction
@@ -945,88 +956,88 @@ namespace footstep_planner
 		return unequal;
 	}
 
-	float 
-		FootstepPlanner::Ni(int n, int i)
-	{
-		float ni;
-		ni = Factrl(n) / (Factrl(i)*Factrl(n - i));
-		return ni;
-	}
+	//float 
+	//	FootstepPlanner::Ni(int n, int i)
+	//{
+	//	float ni;
+	//	ni = Factrl(n) / (Factrl(i)*Factrl(n - i));
+	//	return ni;
+	//}
 
-	// function to calculate the Bernstein basis
-	float 
-		FootstepPlanner::Basis(int n, int i, float t)
-	{
-		float basis;
-		float ti; /* this is t^i */
-		float tni; /* this is (1 - t)^i */
+	//// function to calculate the Bernstein basis
+	//float 
+	//	FootstepPlanner::Basis(int n, int i, float t)
+	//{
+	//	float basis;
+	//	float ti; /* this is t^i */
+	//	float tni; /* this is (1 - t)^i */
 
-		/* handle the special cases to avoid domain problem with pow */
+	//	/* handle the special cases to avoid domain problem with pow */
 
-		if (t == 0. && i == 0)
-			ti = 1.0;
-		else
-			ti = pow(t, i);
+	//	if (t == 0. && i == 0)
+	//		ti = 1.0;
+	//	else
+	//		ti = pow(t, i);
 
-		if (n == i && t == 1.)
-			tni = 1.0;
-		else
-			tni = pow((1 - t), (n - i));
-		basis = Ni(n, i)*ti*tni; /* calculate Bernstein basis function */
-		return basis;
-	}
+	//	if (n == i && t == 1.)
+	//		tni = 1.0;
+	//	else
+	//		tni = pow((1 - t), (n - i));
+	//	basis = Ni(n, i)*ti*tni; /* calculate Bernstein basis function */
+	//	return basis;
+	//}
 
-	// Bezier curve subroutine
-	int 
-		FootstepPlanner::Bezier(Point2DTheta *sPoint, int inPointNum, Point2DTheta *sOutPoint, int outPointNum)
-	{
+	//// Bezier curve subroutine
+	//int 
+	//	FootstepPlanner::Bezier(Point2DTheta *sPoint, int inPointNum, Point2DTheta *sOutPoint, int outPointNum)
+	//{
 
-		float step;
-		float t;
+	//	float step;
+	//	float t;
 
-		/*    calculate the points on the Bezier curve */
-		t = 0;
-		step = 1.0f / ((float)(outPointNum - 1));
+	//	/*    calculate the points on the Bezier curve */
+	//	t = 0;
+	//	step = 1.0f / ((float)(outPointNum - 1));
 
-		for (int i1 = 0; i1 < outPointNum; i1++) /* main loop */
-		{
-			if ((1.0 - t) < 5e-6)
-			{
-				t = 1.0;
-			}
+	//	for (int i1 = 0; i1 < outPointNum; i1++) /* main loop */
+	//	{
+	//		if ((1.0 - t) < 5e-6)
+	//		{
+	//			t = 1.0;
+	//		}
 
-			sOutPoint[i1].x = 0.0;
-			sOutPoint[i1].y = 0.0;
-		
-			for (int posi = 0; posi < inPointNum; posi++) /* Do x,y,z components */
-			{
-				sOutPoint[i1].x = sOutPoint[i1].x + Basis(inPointNum - 1, posi, t)*sPoint[posi].x;
-				sOutPoint[i1].y = sOutPoint[i1].y + Basis(inPointNum - 1, posi, t)*sPoint[posi].y;
-			}
-			t = t + step;
-		}
+	//		sOutPoint[i1].x = 0.0;
+	//		sOutPoint[i1].y = 0.0;
+	//	
+	//		for (int posi = 0; posi < inPointNum; posi++) /* Do x,y,z components */
+	//		{
+	//			sOutPoint[i1].x = sOutPoint[i1].x + Basis(inPointNum - 1, posi, t)*sPoint[posi].x;
+	//			sOutPoint[i1].y = sOutPoint[i1].y + Basis(inPointNum - 1, posi, t)*sPoint[posi].y;
+	//		}
+	//		t = t + step;
+	//	}
 
-		return 0;
-	}
-	int FootstepPlanner::updateBezierMap()
-	{
-		//(Point2DTheta *sPoint, int inPointNum, Point2DTheta *sOutPoint, int outPointNum);
-		PRINT_INFO("Bezier F1 is (%f %f).\n", sPoint[0].x, sPoint[0].y);
-		PRINT_INFO("Bezier F2 is(%f %f).\n", sPoint[1].x, sPoint[1].y);
-		PRINT_INFO("Bezier F3 is (%f %f).\n", sPoint[2].x, sPoint[2].y);
-		PRINT_INFO("Bezier F4 is (%f %f).\n", sPoint[3].x, sPoint[3].y);
+	//	return 0;
+	//}
+	//int FootstepPlanner::updateBezierMap()
+	//{
+	//	//(Point2DTheta *sPoint, int inPointNum, Point2DTheta *sOutPoint, int outPointNum);
+	//	PRINT_INFO("Bezier F1 is (%f %f).\n", sPoint[0].x, sPoint[0].y);
+	//	PRINT_INFO("Bezier F2 is(%f %f).\n", sPoint[1].x, sPoint[1].y);
+	//	PRINT_INFO("Bezier F3 is (%f %f).\n", sPoint[2].x, sPoint[2].y);
+	//	PRINT_INFO("Bezier F4 is (%f %f).\n", sPoint[3].x, sPoint[3].y);
 
-		int x_diff = abs(state_2_cell(sPoint[0].x, ivEnvironmentParams.cell_size) - state_2_cell(sPoint[3].x, ivEnvironmentParams.cell_size));
-		int y_diff = abs(state_2_cell(sPoint[0].y, ivEnvironmentParams.cell_size) - state_2_cell(sPoint[3].y, ivEnvironmentParams.cell_size));
-		// max = (a >= b && a >= c) ? a : (b >= a && b >= c) ? b : c;
-		int outPointNum = x_diff > y_diff ? x_diff : y_diff;
+	//	int x_diff = abs(state_2_cell(sPoint[0].x, ivEnvironmentParams.cell_size) - state_2_cell(sPoint[3].x, ivEnvironmentParams.cell_size));
+	//	int y_diff = abs(state_2_cell(sPoint[0].y, ivEnvironmentParams.cell_size) - state_2_cell(sPoint[3].y, ivEnvironmentParams.cell_size));
+	//	// max = (a >= b && a >= c) ? a : (b >= a && b >= c) ? b : c;
+	//	int outPointNum = x_diff > y_diff ? x_diff : y_diff;
 
-		Point2DTheta sOutPoint[400]; //最大点数为图的weight height
-		Bezier(sPoint, 4, sOutPoint, outPointNum);
+	//	Point2DTheta sOutPoint[400]; //最大点数为图的weight height
+	//	Bezier(sPoint, 4, sOutPoint, outPointNum);
 
-		return 0;
+	//	return 0;
 
-	}
+	////}
 	
 	//void
 	//FootstepPlanner::clearFootstepPathVis(unsigned num_footsteps)
