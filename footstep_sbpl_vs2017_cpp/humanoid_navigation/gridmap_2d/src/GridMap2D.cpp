@@ -375,7 +375,7 @@ namespace gridmap_2d {
 		for (unsigned int i = 0; i < m_mapInfo.width; i++)
 			for (unsigned int j = 0; j < m_mapInfo.height; j++)
 			{
-				if (bezier_distMap.at<float>(i, j) <=0.20 and m_binaryMap.at<uchar>(i,j)==FREE) //신욱똑
+				if (bezier_distMap.at<float>(i, j) <= PASSWIDTH and m_binaryMap.at<uchar>(i,j)==FREE) //신욱똑
 					bezier_binaryMap.at<uchar>(i, j) = FREE;
 				else bezier_binaryMap.at<uchar>(i, j) = OCCUPIED;
 			}

@@ -339,7 +339,22 @@ namespace footstep_planner
 			PRINT_INFO("Solution of size %zu found after %f s\n",
 				solution_state_ids.size(), //总共的步数
 				(double)(clock() - startTime) / CLOCKS_PER_SEC); //.toSec()
-
+			
+			for (int i = 0; i < solution_state_ids.size(); i++)
+			{
+				if (i == 0)
+				{
+					PRINT_INFO("the parameter of the bezier: %f\n", BEZIERPARA);
+					//PRINT_INFO("The half of the width of the passage: %f\n" ,PASSWIDTH);
+					PRINT_INFO("The sequense of the id from start to goal: ");
+				}
+				PRINT_INFO("%d ", solution_state_ids.at(i));
+				if (i == solution_state_ids.size() - 1)
+				{
+					PRINT_INFO("\n");
+				}
+			}
+			
 			if (true)//extractPath(solution_state_ids))
 			{
 				PRINT_INFO("Expanded states: %i total / %i new\n",
@@ -673,8 +688,8 @@ namespace footstep_planner
 	  pointF3.first = x;
 	  pointF3.second = y;
 
-	  pointF2.first = x - cos(theta);
-	  pointF2.second = y - sin(theta);
+	  pointF2.first = x - BEZIERPARA*cos(theta);
+	  pointF2.second = y - BEZIERPARA*sin(theta);
 
 	
 	  State goal(x, y, theta, NOLEG);
@@ -755,8 +770,8 @@ namespace footstep_planner
 	  //getBezierStart2(x + cos(theta), y+ sin(theta));
 	  pointF0.first = x;
 	  pointF0.second = y;
-	  pointF1.first = x + cos(theta);
-	  pointF1.second = y + sin(theta);
+	  pointF1.first = x + BEZIERPARA*cos(theta);
+	  pointF1.second = y + BEZIERPARA*sin(theta);
 
 	  State start(x, y, theta, NOLEG);
 	  State foot_left = getFootPose(start, LEFT);

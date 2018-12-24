@@ -167,7 +167,8 @@ namespace footstep_planner
 				start_foot_id_right != ivIdStartFootRight)
 			{
 				ivHeuristicExpired = true;
-				setStateArea(*p_foot_left, *p_foot_right);
+				//setStateArea(*p_foot_left, *p_foot_right);
+				setStateArea_FootstepSet(*p_foot_left, *p_foot_right);
 			}
 		}
 
@@ -777,7 +778,7 @@ namespace footstep_planner
 	void
 		FootstepPlannerEnvironment::GetPreds(int TargetStateID,
 			std::vector<int> *PredIDV,
-			std::vector<int> *CostV)
+			std::vector<int> *CostV) // ARASearchStateSpace_t* pSearchStateSpace
 	{
 		PredIDV->clear();
 		CostV->clear();
@@ -796,7 +797,7 @@ namespace footstep_planner
 			CostV->push_back(0.0);
 			return;
 		}
-
+		
 		const PlanningState* current = ivStateId2State[TargetStateID];
 
 		// make sure goal state transitions are consistent with
@@ -821,24 +822,24 @@ namespace footstep_planner
 				return;
 			}
 		}
-
+		
 		ivExpandedStates.insert(std::pair<int, int>(current->getX(), current->getY()));
 		++ivNumExpandedStates;
 
-		if (closeToStart(*current))
-		{
-			// map to the start state id
-			PredIDV->push_back(ivIdStartFootLeft);
-			// get actual costs (dependent on whether the start foot is left or right)
-			int start_id;
-			if (current->getLeg() == RIGHT)
-				start_id = ivIdStartFootLeft;
-			else
-				start_id = ivIdStartFootRight;
-			CostV->push_back(stepCost(*current, *ivStateId2State[start_id]));
+		//if (closeToStart(*current)  ) //pSearchStateSpace->eps_satisfied== &&
+		//{
+		//	// map to the start state id
+		//	PredIDV->push_back(ivIdStartFootLeft);
+		//	// get actual costs (dependent on whether the start foot is left or right)
+		//	int start_id;
+		//	if (current->getLeg() == RIGHT)
+		//		start_id = ivIdStartFootLeft;
+		//	else
+		//		start_id = ivIdStartFootRight;
+		//	CostV->push_back(stepCost(*current, *ivStateId2State[start_id]));
 
-			return;
-		}
+		//	return;
+		//}
 
 		PredIDV->reserve(ivFootstepSet.size());
 		CostV->reserve(ivFootstepSet.size());
@@ -1374,7 +1375,53 @@ namespace footstep_planner
 		return ivStateId2State.size();
 	}
 
+	
+	void
+		FootstepPlannerEnvironment::setStateArea_FootstepSet(const PlanningState& left,
+			const PlanningState& right)
+	{
+		ivStateArea.clear();
 
+		const PlanningState* p_state = getHashEntry(right);
+		ivStateArea.push_back(p_state->getId());
+
+		//const PlanningState* current = ivStateId2State[p_state->getId()];
+		std::vector<Footstep>::const_iterator footstep_set_iter;
+		for (footstep_set_iter = ivFootstepSet.begin();
+			footstep_set_iter != ivFootstepSet.end();
+			++footstep_set_iter)
+		{
+
+			if (ivForwardSearch)
+			{
+				PlanningState pred = footstep_set_iter->performMeOnThisState(left);
+				if (occupied(pred) || !reachable(pred, left))
+					continue;
+				p_state = createHashEntryIfNotExists(pred);
+				ivStateArea.push_back(p_state->getId());
+
+				pred = footstep_set_iter->performMeOnThisState(right);
+				if (occupied(pred) || !reachable(pred, right))
+					continue;
+				p_state = createHashEntryIfNotExists(pred);
+				ivStateArea.push_back(p_state->getId());
+			}
+			else
+			{
+				PlanningState succ = footstep_set_iter->performMeOnThisState(left);
+				if (occupied(succ) || !reachable(left, succ))
+					continue;
+				p_state = createHashEntryIfNotExists(succ);
+				ivStateArea.push_back(p_state->getId());
+
+				succ = footstep_set_iter->performMeOnThisState(right);
+				if (occupied(succ) || !reachable(right, succ))
+					continue;
+				p_state = createHashEntryIfNotExists(succ);
+				ivStateArea.push_back(p_state->getId());
+			}
+		}
+	}
 	void
 		FootstepPlannerEnvironment::setStateArea(const PlanningState& left,
 			const PlanningState& right)

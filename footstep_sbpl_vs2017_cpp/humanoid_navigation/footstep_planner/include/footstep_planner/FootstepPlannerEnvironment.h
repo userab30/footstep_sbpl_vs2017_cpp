@@ -248,7 +248,9 @@ public:
    */
   void GetPreds(int TargetStateID, std::vector<int> *PredIDV,
                 std::vector<int> *CostV);
-
+  //void GetPreds(int TargetStateID,
+		//  std::vector<int> *PredIDV,
+		//  std::vector<int> *CostV, ARASearchStateSpace_t* pSearchStateSpace);
   /**
    * @brief Used for RStar: generate succs/preds at some
    * domain-dependent distance. The number of generated succs/preds is up
@@ -335,7 +337,7 @@ protected:
                        int nNumofNeighs, int nDist_c, bool bSuccs);
 
   void setStateArea(const PlanningState& left, const PlanningState& right);
-
+  void setStateArea_FootstepSet(const PlanningState& left, const PlanningState& right);
   /// Wrapper for FootstepPlannerEnvironment::createNewHashEntry(PlanningState).
   const PlanningState* createNewHashEntry(const State& s);
 

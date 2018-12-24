@@ -20,10 +20,6 @@ int main(int argc, char** argv)
 	//environment_params ivEnvironmentParams;
 	footstep_planner::FootstepPlanner ivFootstepPlanner(yamlPath, fileName);
 
-	//getFileParam(ivEnvironmentParams, ivFootstepPlanner, yamlPath, fileName);
-
-
-
 	string envPath = "..\\document\\";
 	string mapName = "env_map.yaml";
 	string startName = "env_start.yaml";

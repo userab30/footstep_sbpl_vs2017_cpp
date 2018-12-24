@@ -384,19 +384,7 @@ int ARAPlanner::ImprovePath(ARASearchStateSpace_t* pSearchStateSpace, double Max
 		//	count = 0;
 		//}
 
-#if DEBUG
-        SBPL_FPRINTF(fDeb, "expanding state(%d): h=%d g=%u key=%u v=%u iterc=%d callnuma=%d expands=%d (g(goal)=%u)\n",
-                     state->MDPstate->StateID, state->h, state->g, state->g+(int)(pSearchStateSpace->eps*state->h),
-                     state->v, state->iterationclosed, state->callnumberaccessed, state->numofexpands,
-                     searchgoalstate->g);
-        SBPL_FPRINTF(fDeb, "expanding: ");
-        PrintSearchState(state, fDeb);
-        if (state->listelem[ARA_INCONS_LIST_ID] != NULL) {
-            SBPL_FPRINTF(fDeb, "ERROR: expanding a state from inconslist\n");
-            throw SBPL_Exception("ERROR: expanding a state from inconslist");
-        }
-        //SBPL_FFLUSH(fDeb);
-#endif
+
 
 #if DEBUG
         if (minkey.key[0] < oldkey.key[0] && fabs(this->finitial_eps - 1.0) < ERR_EPS) {
@@ -427,7 +415,19 @@ int ARAPlanner::ImprovePath(ARASearchStateSpace_t* pSearchStateSpace, double Max
             UpdatePreds(state, pSearchStateSpace);
         else
             UpdateSuccs(state, pSearchStateSpace);
-
+#if DEBUG
+		SBPL_FPRINTF(fDeb, "expanding state(%d): h=%d g=%u key=%u v=%u iterc=%d callnuma=%d expands=%d (g(goal)=%u)\n",
+			state->MDPstate->StateID, state->h, state->g, state->g + (int)(pSearchStateSpace->eps*state->h),
+			state->v, state->iterationclosed, state->callnumberaccessed, state->numofexpands,
+			searchgoalstate->g);
+		SBPL_FPRINTF(fDeb, "expanding: ");
+		PrintSearchState(state, fDeb);
+		if (state->listelem[ARA_INCONS_LIST_ID] != NULL) {
+			SBPL_FPRINTF(fDeb, "ERROR: expanding a state from inconslist\n");
+			throw SBPL_Exception("ERROR: expanding a state from inconslist");
+		}
+		//SBPL_FFLUSH(fDeb);
+#endif
         //recompute minkey
         minkey = pSearchStateSpace->heap->getminkeyheap();
 
@@ -1083,7 +1083,7 @@ int ARAPlanner::replan(double allocated_time_secs, vector<int>* solution_stateID
     SBPL_PRINTF("planner: replan called (bFirstSol=%d, bOptSol=%d)\n", bFirstSolution, bOptimalSolution);
 
     //plan
-	bFound = Search(pSearchStateSpace_, pathIds, PathCost, bFirstSolution, bOptimalSolution, 6000);//allocated_time_secs);//6000
+	bFound = Search(pSearchStateSpace_, pathIds, PathCost, bFirstSolution, bOptimalSolution, allocated_time_secs);//allocated_time_secs);//6000
     if (!bFound)
     {
         SBPL_PRINTF("failed to find a solution\n");
