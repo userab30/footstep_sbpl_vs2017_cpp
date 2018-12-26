@@ -148,6 +148,9 @@ namespace footstep_planner
 		ivEnvironmentParams.step_range.push_back(ivEnvironmentParams.step_range[0]);
 		ivEnvironmentParams.max_step_width = sqrt(max_x*max_x + max_y * max_y) * 1.5;
 
+		thetaAdd = atan2(ivEnvironmentParams.footsize_y, ivEnvironmentParams.footsize_x);
+		halfDiagonal = sqrt(pow(ivEnvironmentParams.footsize_y / 2, 2) + pow(ivEnvironmentParams.footsize_x / 2, 2));
+
 		//std::cout << "ivEnvironmentParams.num_angle_bins:" << ivEnvironmentParams.num_angle_bins << std::endl;
 		//std::cout << "ivEnvironmentParams.forward_search: " << ivEnvironmentParams.forward_search << std::endl;
 		//std::cout << "ivEnvironmentParams.cell_size: " << ivEnvironmentParams.cell_size << std::endl;
@@ -370,17 +373,17 @@ namespace footstep_planner
 				   return false;
 				}
 				//clearFootstepPathVis(0);
-				float thetaAdd = atan2(ivEnvironmentParams.footsize_y, ivEnvironmentParams.footsize_x);
-				float halfDiagonal = sqrt(pow(ivEnvironmentParams.footsize_y / 2, 2) + pow(ivEnvironmentParams.footsize_x / 2, 2));
+				/*float thetaAdd = atan2(ivEnvironmentParams.footsize_y, ivEnvironmentParams.footsize_x);
+				float halfDiagonal = sqrt(pow(ivEnvironmentParams.footsize_y / 2, 2) + pow(ivEnvironmentParams.footsize_x / 2, 2));*/
 				 // add the missing start foot to the publish vector for visualization:
 				if (ivPath.front().getLeg() == LEFT)
-					FootstepPath(ivStartFootRight, thetaAdd, halfDiagonal);
+					FootstepPath(ivStartFootRight, watchBezier_binaryMap);
 				else
-					FootstepPath(ivStartFootLeft, thetaAdd, halfDiagonal);
+					FootstepPath(ivStartFootLeft, watchBezier_binaryMap);
 				//画出每个脚印
 				for(state_iter_t path_iter = getPathBegin(); path_iter != getPathEnd(); ++path_iter)
 			    {
-					FootstepPath(*path_iter, thetaAdd, halfDiagonal);
+					FootstepPath(*path_iter, watchBezier_binaryMap);
 			    }
 				//footPoseToMarker();
 				//broadcastExpandedNodesVis();
@@ -406,7 +409,7 @@ namespace footstep_planner
 		}
 	}
 	void
-		FootstepPlanner::FootstepPath(const State& foot_pose, float thetaAdd, float halfDiagonal)
+		FootstepPlanner::FootstepPath(const State& foot_pose,cv::Mat& binaryMap)
 	{
 
 		float cos_theta = cos(foot_pose.getTheta()+ thetaAdd);
@@ -433,10 +436,10 @@ namespace footstep_planner
 		//cv::waitKey();
 		//watchBezier_binaryMap.at<uchar>(leftUpper_x, leftUpper_y) = 0;
 		//watchBezier_binaryMap.at<uchar>(rightLower_x, rightLower_y) = 0;
-		cv::line(watchBezier_binaryMap, cv::Point(leftUpper_y, leftUpper_x), cv::Point(rightUpper_y, rightUpper_x), cv::Scalar(0, 0, 255), 1);
-		cv::line(watchBezier_binaryMap, cv::Point(leftUpper_y, leftUpper_x), cv::Point(leftLower_y, leftLower_x), cv::Scalar(0, 0, 255), 1);
-		cv::line(watchBezier_binaryMap, cv::Point(rightUpper_y, rightUpper_x), cv::Point(rightLower_y, rightLower_x), cv::Scalar(0, 0, 255), 1);
-		cv::line(watchBezier_binaryMap, cv::Point(leftLower_y, leftLower_x), cv::Point(rightLower_y, rightLower_x), cv::Scalar(0, 0, 255), 1);
+		cv::line(binaryMap, cv::Point(leftUpper_y, leftUpper_x), cv::Point(rightUpper_y, rightUpper_x), cv::Scalar(0, 0, 255), 1);
+		cv::line(binaryMap, cv::Point(leftUpper_y, leftUpper_x), cv::Point(leftLower_y, leftLower_x), cv::Scalar(0, 0, 255), 1);
+		cv::line(binaryMap, cv::Point(rightUpper_y, rightUpper_x), cv::Point(rightLower_y, rightLower_x), cv::Scalar(0, 0, 255), 1);
+		cv::line(binaryMap, cv::Point(leftLower_y, leftLower_x), cv::Point(rightLower_y, rightLower_x), cv::Scalar(0, 0, 255), 1);
 
 		//cv::rectangle(watchBezier_binaryMap, cv::Point(leftUpper_y, leftUpper_x), cv::Point(rightLower_y, rightLower_x), cv::Scalar(0, 0, 0), 1, 1, 0);
 		/*cv::imshow("watchBezier_binaryMap", watchBezier_binaryMap);
@@ -975,31 +978,35 @@ namespace footstep_planner
 		{
 			pointF0.first = ivStartFoot.getX();
 			pointF0.second = ivStartFoot.getY();
-			pointF1.first = pointF0.first + BEZIERPARA * cos(ivStartFoot.getTheta());
-			pointF1.second = pointF0.second + BEZIERPARA * sin(ivStartFoot.getTheta());
-
 			pointF3.first = ivGoalFoot.getX();
 			pointF3.second = ivGoalFoot.getY();
+			//pointF1.first = pointF0.first + BEZIERPARA * cos(ivStartFoot.getTheta());
+			//pointF1.second = pointF0.second + BEZIERPARA * sin(ivStartFoot.getTheta());
+			//pointF2.first = pointF3.first - BEZIERPARA * cos(ivGoalFoot.getTheta());
+			//pointF2.second = pointF3.second - BEZIERPARA * sin(ivGoalFoot.getTheta());
 
-			pointF2.first = pointF3.first - BEZIERPARA * cos(ivGoalFoot.getTheta());
-			pointF2.second = pointF3.second - BEZIERPARA * sin(ivGoalFoot.getTheta());
+			ivMapPtr->initBezierMap();
+			for (float bezierPara = 0.1; bezierPara <= 1; bezierPara+=0.1)
+			{
+				
+				pointF1.first = pointF0.first + bezierPara * cos(ivStartFoot.getTheta());
+				pointF1.second = pointF0.second + bezierPara * sin(ivStartFoot.getTheta());
+				pointF2.first = pointF3.first - bezierPara * cos(ivGoalFoot.getTheta());
+				pointF2.second = pointF3.second - bezierPara * sin(ivGoalFoot.getTheta());
+				ivMapPtr->creatBezierMap(pointF0, pointF1, pointF2, pointF3);		
+			}
 
-			//pointF0.first = ivStartFoot.getX();
-			//pointF0.second = ivStartFoot.getY();
-			//pointF3.first = ivGoalFoot.getX();
-			//pointF3.second = ivGoalFoot.getY();
-
-			//ivMapPtr->initBezierMap();
-			//for (float bezierPara = 0.1; bezierPara <= 1; bezierPara+=0.1)
+			//FootstepPath(ivStartFoot, ivMapPtr->bezier_binaryMap);
+			//显示候选的脚印
+			getStateArea_FootstepSet(ivStartFootLeft, ivGoalFootLeft);
+			//FootstepPath(ivStartSuccFoot.begin(), ivMapPtr->bezier_binaryMap);
+			//for (state_iter_t path_iter = ivStartSuccFoot.begin(); path_iter != ivStartSuccFoot.end(); ++path_iter)
 			//{
-			//	
-			//	pointF1.first = pointF0.first + bezierPara * cos(ivStartFoot.getTheta());
-			//	pointF1.second = pointF0.second + bezierPara * sin(ivStartFoot.getTheta());
-			//	pointF2.first = pointF3.first - bezierPara * cos(ivGoalFoot.getTheta());
-			//	pointF2.second = pointF3.second - bezierPara * sin(ivGoalFoot.getTheta());
-			//	ivMapPtr->creatBezierMap(pointF0, pointF1, pointF2, pointF3);		
+			//	FootstepPath(*path_iter, ivMapPtr->bezier_binaryMap);
 			//}
-			//ivMapPtr->drawBezierMap();
+			watchBezier_binaryMap = ivMapPtr->bezier_binaryMap;
+			ivMapPtr->drawBezierMap();
+
 
 			ivMapPtr->initBezierMap();
 			ivMapPtr->updateBezierMap(pointF0, pointF1, pointF2, pointF3);
@@ -1013,7 +1020,57 @@ namespace footstep_planner
 		}
 
 	}
+	void
+		FootstepPlanner::getStateArea_FootstepSet(const State& Start, const State& Goal)
+	{
+		ivStartSuccFoot.clear();
+		ivStartSuccFoot.push_back(Start);
 
+		ivGoalPredFoot.clear();
+		ivGoalPredFoot.push_back(Goal);
+		FootstepPath(Start, ivMapPtr->bezier_binaryMap);
+		FootstepPath(Goal, ivMapPtr->bezier_binaryMap);
+		watchBezier_binaryMap = ivMapPtr->bezier_binaryMap;
+
+		PlanningState stateGoal(Goal, ivEnvironmentParams.cell_size, ivEnvironmentParams.num_angle_bins, ivEnvironmentParams.hash_table_size);
+		PlanningState stateStart(Start, ivEnvironmentParams.cell_size, ivEnvironmentParams.num_angle_bins, ivEnvironmentParams.hash_table_size);
+		std::vector<Footstep>::const_iterator footstep_set_iter;
+		for (footstep_set_iter = ivEnvironmentParams.footstep_set.begin();
+			footstep_set_iter != ivEnvironmentParams.footstep_set.end();
+			++footstep_set_iter)
+		{
+	
+			PlanningState pred = footstep_set_iter->reverseMeOnThisState(stateGoal);
+			float x = cell_2_state(pred.getX(), ivEnvironmentParams.cell_size);
+			float y = cell_2_state(pred.getY(), ivEnvironmentParams.cell_size);
+			float theta = angle_cell_2_state(pred.getTheta(), ivEnvironmentParams.num_angle_bins);
+			State goalPred(x, y, theta ,pred.getLeg());
+			ivGoalPredFoot.push_back(goalPred);
+			FootstepPath(goalPred, ivMapPtr->bezier_binaryMap);
+			watchBezier_binaryMap = ivMapPtr->bezier_binaryMap;
+			
+			PlanningState succ = footstep_set_iter->performMeOnThisState(stateStart);
+			x = cell_2_state(succ.getX(), ivEnvironmentParams.cell_size);
+			y = cell_2_state(succ.getY(), ivEnvironmentParams.cell_size);
+			theta = angle_cell_2_state(succ.getTheta(), ivEnvironmentParams.num_angle_bins);
+			State startSucc(x, y, theta, succ.getLeg());
+			ivStartSuccFoot.push_back(startSucc);
+			FootstepPath(startSucc, ivMapPtr->bezier_binaryMap);
+			watchBezier_binaryMap = ivMapPtr->bezier_binaryMap;
+			
+			/*if (occupied(succ) || !reachable(left, succ))
+				continue;
+			p_state = createHashEntryIfNotExists(succ);
+			ivStateArea.push_back(p_state->getId());
+
+			succ = footstep_set_iter->performMeOnThisState(right);
+			if (occupied(succ) || !reachable(right, succ))
+				continue;
+			p_state = createHashEntryIfNotExists(succ);
+			ivStateArea.push_back(p_state->getId());*/
+	
+		}
+	}
 	State
 		FootstepPlanner::getFootPose(const State& robot, Leg leg)
 	{

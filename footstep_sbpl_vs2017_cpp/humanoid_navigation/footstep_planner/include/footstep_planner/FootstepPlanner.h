@@ -270,7 +270,7 @@ public:
 
   cv::Mat watchBezier_binaryMap;
   cv::Mat watchBezier_distMap;
-  void FootstepPath(const State& foot_pose, float thetaAdd, float halfDiagonal);
+  void FootstepPath(const State& foot_pose, cv::Mat& binaryMap);
  // void FootstepPath();
   
 
@@ -371,11 +371,15 @@ protected:
 
   std::vector<int> ivPlanningStatesIds;
 
-
+  float thetaAdd;
+  float halfDiagonal;
   std::pair<float, float> pointF0; //F1
   std::pair<float, float> pointF1; //F2
   std::pair<float, float> pointF2;  //F3
   std::pair<float, float> pointF3;  //F4
+  std::vector<State> ivStartSuccFoot;
+  std::vector<State> ivGoalPredFoot;
+  void getStateArea_FootstepSet(const State& Start,const State& Goal);
 
  
 };

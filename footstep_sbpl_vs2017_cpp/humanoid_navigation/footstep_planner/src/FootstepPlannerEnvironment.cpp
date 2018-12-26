@@ -1374,7 +1374,7 @@ namespace footstep_planner
 	{
 		return ivStateId2State.size();
 	}
-
+	
 	
 	void
 		FootstepPlannerEnvironment::setStateArea_FootstepSet(const PlanningState& left,
@@ -1394,13 +1394,13 @@ namespace footstep_planner
 
 			if (ivForwardSearch)
 			{
-				PlanningState pred = footstep_set_iter->performMeOnThisState(left);
+				PlanningState pred = footstep_set_iter->reverseMeOnThisState(left);
 				if (occupied(pred) || !reachable(pred, left))
 					continue;
 				p_state = createHashEntryIfNotExists(pred);
 				ivStateArea.push_back(p_state->getId());
 
-				pred = footstep_set_iter->performMeOnThisState(right);
+				pred = footstep_set_iter->reverseMeOnThisState(right);
 				if (occupied(pred) || !reachable(pred, right))
 					continue;
 				p_state = createHashEntryIfNotExists(pred);

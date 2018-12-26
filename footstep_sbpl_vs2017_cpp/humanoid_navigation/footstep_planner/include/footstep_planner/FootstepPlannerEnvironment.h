@@ -338,6 +338,7 @@ protected:
 
   void setStateArea(const PlanningState& left, const PlanningState& right);
   void setStateArea_FootstepSet(const PlanningState& left, const PlanningState& right);
+  
   /// Wrapper for FootstepPlannerEnvironment::createNewHashEntry(PlanningState).
   const PlanningState* createNewHashEntry(const State& s);
 

@@ -240,8 +240,8 @@ public:
   int Bezier(Point2DTheta *sPoint, int inPointNum, Point2DTheta *sOutPoint, int outPointNum);
   void initBezierMap();
   int updateBezierMap(std::pair<float, float> pointF0, std::pair<float, float> pointF1, std::pair<float, float> pointF2, std::pair<float, float> pointF3);
-  //void creatBezierMap(std::pair<float, float> pointF0, std::pair<float, float> pointF1, std::pair<float, float> pointF2, std::pair<float, float> pointF3);
-  //void drawBezierMap();
+  void creatBezierMap(std::pair<float, float> pointF0, std::pair<float, float> pointF1, std::pair<float, float> pointF2, std::pair<float, float> pointF3);
+  void drawBezierMap();
 
 protected:
   //nav_msgs::MapMetaData m_mapInfo;

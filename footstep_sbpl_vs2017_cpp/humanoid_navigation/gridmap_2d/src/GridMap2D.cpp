@@ -349,43 +349,45 @@ namespace gridmap_2d {
 			}
 
 	}
-	//void GridMap2D::creatBezierMap(std::pair<float, float> pointF0, std::pair<float, float> pointF1, std::pair<float, float> pointF2, std::pair<float, float> pointF3)
-	//{
-	//	getBezierF0(pointF0.first, pointF0.second);
-	//	getBezierF1(pointF1.first, pointF1.second);
-	//	getBezierF2(pointF2.first, pointF2.second);
-	//	getBezierF3(pointF3.first, pointF3.second);
-	//	//(Point2DTheta *sPoint, int inPointNum, Point2DTheta *sOutPoint, int outPointNum);
-	//	PRINT_INFO("Bezier F1 is (%f %f).\n", sPoint[0].x, sPoint[0].y);
-	//	PRINT_INFO("Bezier F2 is(%f %f).\n", sPoint[1].x, sPoint[1].y);
-	//	PRINT_INFO("Bezier F3 is (%f %f).\n", sPoint[2].x, sPoint[2].y);
-	//	PRINT_INFO("Bezier F4 is (%f %f).\n", sPoint[3].x, sPoint[3].y);
-	//	int x_diff = abs(footstep_planner::state_2_cell(sPoint[0].x, m_mapInfo.resolution) - footstep_planner::state_2_cell(sPoint[3].x, m_mapInfo.resolution));
-	//	int y_diff = abs(footstep_planner::state_2_cell(sPoint[0].y, m_mapInfo.resolution) - footstep_planner::state_2_cell(sPoint[3].y, m_mapInfo.resolution));
-	//	// max = (a >= b && a >= c) ? a : (b >= a && b >= c) ? b : c;
-	//	int outPointNum = x_diff > y_diff ? 2 * x_diff : 2 * y_diff;
+	void GridMap2D::creatBezierMap(std::pair<float, float> pointF0, std::pair<float, float> pointF1, std::pair<float, float> pointF2, std::pair<float, float> pointF3)
+	{
+		getBezierF0(pointF0.first, pointF0.second);
+		getBezierF1(pointF1.first, pointF1.second);
+		getBezierF2(pointF2.first, pointF2.second);
+		getBezierF3(pointF3.first, pointF3.second);
+		//(Point2DTheta *sPoint, int inPointNum, Point2DTheta *sOutPoint, int outPointNum);
 
-	//	Point2DTheta sOutPoint[400]; //最大点数为图的weight height
-	//	Bezier(sPoint, 4, sOutPoint, outPointNum);
+		int x_diff = abs(footstep_planner::state_2_cell(sPoint[0].x, m_mapInfo.resolution) - footstep_planner::state_2_cell(sPoint[3].x, m_mapInfo.resolution));
+		int y_diff = abs(footstep_planner::state_2_cell(sPoint[0].y, m_mapInfo.resolution) - footstep_planner::state_2_cell(sPoint[3].y, m_mapInfo.resolution));
+		// max = (a >= b && a >= c) ? a : (b >= a && b >= c) ? b : c;
+		int outPointNum = x_diff > y_diff ? 2 * x_diff : 2 * y_diff;
+
+		Point2DTheta sOutPoint[400]; //最大点数为图的weight height
+		Bezier(sPoint, 4, sOutPoint, outPointNum);
 
 
-	//	for (unsigned int j = 0; j < outPointNum; j++) {
-	//		int x = footstep_planner::state_2_cell(sOutPoint[j].x, m_mapInfo.resolution);
-	//		int y = footstep_planner::state_2_cell(sOutPoint[j].y, m_mapInfo.resolution);
-	//		bezier_binaryMap.at<uchar>(x, y) = OCCUPIED;
-	//	}
-	//}
-	//void GridMap2D::drawBezierMap()
-	//{
-	//	cv::imshow("bezier_binaryMap", bezier_binaryMap);
-	//	cv::waitKey();
-	//}
+		for (unsigned int j = 0; j < outPointNum; j++) {
+			int x = footstep_planner::state_2_cell(sOutPoint[j].x, m_mapInfo.resolution);
+			int y = footstep_planner::state_2_cell(sOutPoint[j].y, m_mapInfo.resolution);
+			bezier_binaryMap.at<uchar>(x, y) = OCCUPIED;
+		}
+	}
+	void GridMap2D::drawBezierMap()
+	{
+		cv::imshow("bezier_binaryMap", bezier_binaryMap);
+		cv::waitKey();
+	}
 	int GridMap2D::updateBezierMap(std::pair<float, float> pointF0, std::pair<float, float> pointF1, std::pair<float, float> pointF2, std::pair<float, float> pointF3)
 	{
 		getBezierF0(pointF0.first, pointF0.second);
 		getBezierF1(pointF1.first, pointF1.second);
 		getBezierF2(pointF2.first, pointF2.second);
 		getBezierF3(pointF3.first, pointF3.second);
+
+		PRINT_INFO("Bezier F1 is (%f %f).\n", sPoint[0].x, sPoint[0].y);
+		PRINT_INFO("Bezier F2 is(%f %f).\n", sPoint[1].x, sPoint[1].y);
+		PRINT_INFO("Bezier F3 is (%f %f).\n", sPoint[2].x, sPoint[2].y);
+		PRINT_INFO("Bezier F4 is (%f %f).\n", sPoint[3].x, sPoint[3].y);
 
 		int x_diff = abs(footstep_planner::state_2_cell(sPoint[0].x, m_mapInfo.resolution) - footstep_planner::state_2_cell(sPoint[3].x, m_mapInfo.resolution));
 		int y_diff = abs(footstep_planner::state_2_cell(sPoint[0].y, m_mapInfo.resolution) - footstep_planner::state_2_cell(sPoint[3].y, m_mapInfo.resolution));
