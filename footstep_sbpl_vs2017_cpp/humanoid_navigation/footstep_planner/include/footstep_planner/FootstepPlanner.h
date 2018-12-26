@@ -32,6 +32,9 @@
 #include <footstep_planner/FootstepPlannerEnvironment.h>
 #include <footstep_planner/PlanningStateChangeQuery.h>
 #include <footstep_planner/State.h>
+#include <math.h>
+#include <opencv2/opencv.hpp>
+
 //#include <nav_msgs/Path.h>
 //#include <nav_msgs/OccupancyGrid.h>
 //#include <ros/ros.h>
@@ -267,6 +270,8 @@ public:
 
   cv::Mat watchBezier_binaryMap;
   cv::Mat watchBezier_distMap;
+  void FootstepPath(const State& foot_pose, float thetaAdd, float halfDiagonal);
+ // void FootstepPath();
   
 
 
@@ -277,6 +282,7 @@ protected:
   //void broadcastFootstepPathVis();
   //void broadcastHeuristicPathVis();
   //void broadcastPathVis();
+
 
   /// helper to create service response
   //void extractFootstepsSrv(std::vector<humanoid_nav_msgs::StepTarget> & footsteps) const;
@@ -291,12 +297,12 @@ protected:
    * @brief Extracts the path (list of foot poses) from a list of state
    * IDs calculated by the SBPL.
    */
-  //bool extractPath(const std::vector<int>& state_ids);
+  bool extractPath(const std::vector<int>& state_ids);
 
   ///// @brief Generates a visualization msgs for a foot pose.
+
   //void footPoseToMarker(const State& footstep,
   //                      visualization_msgs::Marker* marker);
-
   /**
    * @brief Starts the planning task in the underlying SBPL.
    *
@@ -328,6 +334,8 @@ protected:
 
   State ivStartFootLeft;
   State ivStartFootRight;
+  State ivStartFoot;
+  State ivGoalFoot;
   State ivGoalFootLeft;
   State ivGoalFootRight;
 
@@ -364,51 +372,12 @@ protected:
   std::vector<int> ivPlanningStatesIds;
 
 
-  //Point2DTheta sPoint[4];
-
   std::pair<float, float> pointF0; //F1
   std::pair<float, float> pointF1; //F2
   std::pair<float, float> pointF2;  //F3
   std::pair<float, float> pointF3;  //F4
 
-  //void getBezierStart1(float x, float y)
-  //{
-	 // sPoint[0].x = x;
-	 // sPoint[0].y = y;
-  //}
-  //void getBezierStart2(float x, float y)
-  //{
-	 // sPoint[1].x = x;
-	 // sPoint[1].y = y;
-  //}
-  //void getBezierGoal1(float x, float y)
-  //{
-	 // sPoint[2].x = x;
-	 // sPoint[2].y = y;
-  //}
-  //void getBezierGoal2(float x, float y)
-  //{
-	 // sPoint[3].x = x;
-	 // sPoint[3].y = y;
-  //}
-  //float Factrl(int number)
-  //{
-	 // if (number <= 1)
-		//  return 1;
-	 // else
-		//  return number * Factrl(number - 1);
-  //};
-
-  //// function to calculate the factorial function for Bernstein basis
-  //float Ni(int, int);
-
-  //// function to calculate the Bernstein basis
-  //float Basis(int, int, float);
-
-  //// Bezier curve subroutine
-  //int Bezier(Point2DTheta *sPoint, int inPointNum, Point2DTheta *sOutPoint, int outPointNum);
-
-  //int updateBezierMap();
+ 
 };
 
 
