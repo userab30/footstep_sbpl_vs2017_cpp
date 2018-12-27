@@ -68,7 +68,14 @@ struct posInfo {
 		double y;
 		double z;
 	};
-
+struct bezierInfo {
+	float curvatureStart;
+	float curvatureGoal;
+	int startSucc=0;
+	int goalSucc=0;
+	float bezierParaD1;
+	float bezierParaD2;
+};
 class StartGoalInfo {
 	public:
 		int seq;
@@ -271,6 +278,7 @@ public:
   cv::Mat watchBezier_binaryMap;
   cv::Mat watchBezier_distMap;
   void FootstepPath(const State& foot_pose, cv::Mat& binaryMap);
+  
  // void FootstepPath();
   
 
@@ -380,6 +388,10 @@ protected:
   std::vector<State> ivStartSuccFoot;
   std::vector<State> ivGoalPredFoot;
   void getStateArea_FootstepSet(const State& Start,const State& Goal);
+  float getF1t(bool flag, float r);
+  float getF2t(bool flag, float r);
+  float getCurvature(float r);
+  void isOccupiedStateArea(const State& Start, const State& Goal);
 
  
 };

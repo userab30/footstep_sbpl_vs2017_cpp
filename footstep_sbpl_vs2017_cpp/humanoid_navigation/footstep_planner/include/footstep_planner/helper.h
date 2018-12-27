@@ -23,7 +23,7 @@
 
 #define DEBUG_HASH 0
 #define DEBUG_TIME 0
-#define BEZIERPARA 0.5 
+#define BEZIERPARA 0.5
 #define PASSWIDTH 0.2 
 
 
