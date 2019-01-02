@@ -980,73 +980,14 @@ namespace footstep_planner
 			pointF0.second = ivStartFoot.getY();
 			pointF3.first = ivGoalFoot.getX();
 			pointF3.second = ivGoalFoot.getY();
-			//pointF1.first = pointF0.first + BEZIERPARA * cos(ivStartFoot.getTheta());
-			//pointF1.second = pointF0.second + BEZIERPARA * sin(ivStartFoot.getTheta());
-			//pointF2.first = pointF3.first - BEZIERPARA * cos(ivGoalFoot.getTheta());
-			//pointF2.second = pointF3.second - BEZIERPARA * sin(ivGoalFoot.getTheta());
 
-			//获取参数化贝塞尔曲线通道，然后筛选可行的开始和目标处的候选脚印
-			getStateArea_FootstepSet(ivStartFootLeft, ivGoalFootLeft);
-		
-
-			std::vector<bezierInfo> curvatureSet; //存储多条贝塞尔曲线的相关信息
-			curvatureSet.clear();
-			for (float bezierParaD1 = 0.1; bezierParaD1 <= 1; bezierParaD1 +=0.1)
-			{
-				for (float bezierParaD2 = 0.1; bezierParaD2 <= 1; bezierParaD2 += 0.1)
-				{
-					pointF1.first = pointF0.first + bezierParaD1 * cos(ivStartFoot.getTheta());
-					pointF1.second = pointF0.second + bezierParaD1 * sin(ivStartFoot.getTheta());
-					pointF2.first = pointF3.first - bezierParaD2 * cos(ivGoalFoot.getTheta());
-					pointF2.second = pointF3.second - bezierParaD2 * sin(ivGoalFoot.getTheta());
-					ivMapPtr->initBezierMap();
-					ivMapPtr->creatBezierMap(pointF0, pointF1, pointF2, pointF3);
-
-					bezierInfo bezierCurAndSucc;
-					bezierCurAndSucc.bezierParaD1 = bezierParaD1;
-					bezierCurAndSucc.bezierParaD2 = bezierParaD2;
-					for (state_iter_t path_iter = ivStartSuccFoot.begin(); path_iter != ivStartSuccFoot.end(); ++path_iter)
-					{
-						if (!ivPlannerEnvironmentPtr->occupied(*path_iter))
-						{
-							bezierCurAndSucc.startSucc += 1;
-							//FootstepPath(*path_iter, ivMapPtr->bezier_binaryMap);
-						}
-						
-					}
-					for (state_iter_t path_iter = ivGoalPredFoot.begin(); path_iter != ivGoalPredFoot.end(); ++path_iter)
-					{
-						if (!ivPlannerEnvironmentPtr->occupied(*path_iter))
-						{
-							bezierCurAndSucc.goalSucc += 1;
-							//FootstepPath(*path_iter, ivMapPtr->bezier_binaryMap);
-						}
-
-					}
-					bezierCurAndSucc.curvatureStart = getCurvature(0);
-					bezierCurAndSucc.curvatureGoal = getCurvature(1);
-
-					curvatureSet.push_back(bezierCurAndSucc);
-
-					//显示候选的脚印
-				}
-						
-			}
-
-			//FootstepPath(ivStartFoot, ivMapPtr->bezier_binaryMap);
-			//显示候选脚印
-			//FootstepPath(ivStartSuccFoot.begin(), ivMapPtr->bezier_binaryMap);
-			for (state_iter_t path_iter = ivStartSuccFoot.begin(); path_iter != ivStartSuccFoot.end(); ++path_iter)
-			{
-				FootstepPath(*path_iter, ivMapPtr->bezier_binaryMap);
-			}
-			watchBezier_binaryMap = ivMapPtr->bezier_binaryMap;
-			ivMapPtr->drawBezierMap(); //imshow
-
+			///*获取参数化贝塞尔曲线通道，然后筛选可行的开始和目标处的候选脚印*/
+			//selectBezierPare()
 			pointF1.first = pointF0.first + BEZIERPARA * cos(ivStartFoot.getTheta());
 			pointF1.second = pointF0.second + BEZIERPARA * sin(ivStartFoot.getTheta());
 			pointF2.first = pointF3.first - BEZIERPARA * cos(ivGoalFoot.getTheta());
 			pointF2.second = pointF3.second - BEZIERPARA * sin(ivGoalFoot.getTheta());
+
 			ivMapPtr->initBezierMap();
 			ivMapPtr->updateBezierMap(pointF0, pointF1, pointF2, pointF3);
 			watchBezier_binaryMap = ivMapPtr->bezier_binaryMap;
@@ -1058,6 +999,64 @@ namespace footstep_planner
 			}
 		}
 
+	}
+	void FootstepPlanner::selectBezierPare()
+	{
+		getStateArea_FootstepSet(ivStartFootLeft, ivGoalFootLeft);
+
+		std::vector<bezierInfo> curvatureSet; //存储多条贝塞尔曲线的相关信息
+		curvatureSet.clear();
+		for (float bezierParaD1 = 0.1; bezierParaD1 <= 1; bezierParaD1 += 0.1)
+		{
+			for (float bezierParaD2 = 0.1; bezierParaD2 <= 1; bezierParaD2 += 0.1)
+			{
+				pointF1.first = pointF0.first + bezierParaD1 * cos(ivStartFoot.getTheta());
+				pointF1.second = pointF0.second + bezierParaD1 * sin(ivStartFoot.getTheta());
+				pointF2.first = pointF3.first - bezierParaD2 * cos(ivGoalFoot.getTheta());
+				pointF2.second = pointF3.second - bezierParaD2 * sin(ivGoalFoot.getTheta());
+				ivMapPtr->initBezierMap();
+				ivMapPtr->creatBezierMap(pointF0, pointF1, pointF2, pointF3);
+
+				bezierInfo bezierCurAndSucc;
+				bezierCurAndSucc.bezierParaD1 = bezierParaD1;
+				bezierCurAndSucc.bezierParaD2 = bezierParaD2;
+				for (state_iter_t path_iter = ivStartSuccFoot.begin(); path_iter != ivStartSuccFoot.end(); ++path_iter)
+				{
+					if (!ivPlannerEnvironmentPtr->occupied(*path_iter))
+					{
+						bezierCurAndSucc.startSucc += 1;
+						//FootstepPath(*path_iter, ivMapPtr->bezier_binaryMap);
+					}
+
+				}
+				for (state_iter_t path_iter = ivGoalPredFoot.begin(); path_iter != ivGoalPredFoot.end(); ++path_iter)
+				{
+					if (!ivPlannerEnvironmentPtr->occupied(*path_iter))
+					{
+						bezierCurAndSucc.goalSucc += 1;
+						//FootstepPath(*path_iter, ivMapPtr->bezier_binaryMap);
+					}
+
+				}
+				bezierCurAndSucc.curvatureStart = getCurvature(0);
+				bezierCurAndSucc.curvatureGoal = getCurvature(1);
+
+				curvatureSet.push_back(bezierCurAndSucc);
+
+				//显示候选的脚印
+			}
+
+		}
+
+		//FootstepPath(ivStartFoot, ivMapPtr->bezier_binaryMap);
+		//显示候选脚印
+		//FootstepPath(ivStartSuccFoot.begin(), ivMapPtr->bezier_binaryMap);
+		for (state_iter_t path_iter = ivStartSuccFoot.begin(); path_iter != ivStartSuccFoot.end(); ++path_iter)
+		{
+			FootstepPath(*path_iter, ivMapPtr->bezier_binaryMap);
+		}
+		watchBezier_binaryMap = ivMapPtr->bezier_binaryMap;
+		ivMapPtr->drawBezierMap(); //imshow
 	}
 	float FootstepPlanner::getF1t(bool flag,float r)
 	{

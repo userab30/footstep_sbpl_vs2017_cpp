@@ -278,7 +278,6 @@ public:
   cv::Mat watchBezier_binaryMap;
   cv::Mat watchBezier_distMap;
   void FootstepPath(const State& foot_pose, cv::Mat& binaryMap);
-  
  // void FootstepPath();
   
 

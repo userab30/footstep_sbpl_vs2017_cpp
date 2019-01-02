@@ -43,7 +43,7 @@
 //as planning time exist, ARA* decreases epsilon bound
 #define ARA_DECREASE_EPS    0.2
 //final epsilon bound
-#define ARA_FINAL_EPS	    1.0
+#define ARA_FINAL_EPS	    1.4
 //---------------------
 #define ARA_INCONS_LIST_ID 0
 

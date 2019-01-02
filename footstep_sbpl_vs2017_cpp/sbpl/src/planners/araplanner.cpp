@@ -383,7 +383,7 @@ int ARAPlanner::ImprovePath(ARASearchStateSpace_t* pSearchStateSpace, double Max
 		//{
 		//	count = 0;
 		//}
-
+		
 
 
 #if DEBUG
@@ -1083,7 +1083,7 @@ int ARAPlanner::replan(double allocated_time_secs, vector<int>* solution_stateID
     SBPL_PRINTF("planner: replan called (bFirstSol=%d, bOptSol=%d)\n", bFirstSolution, bOptimalSolution);
 
     //plan
-	bFound = Search(pSearchStateSpace_, pathIds, PathCost, bFirstSolution, bOptimalSolution, allocated_time_secs);//allocated_time_secs);//6000
+	bFound = Search(pSearchStateSpace_, pathIds, PathCost, bFirstSolution, bOptimalSolution, 6000);//allocated_time_secs);//6000
     if (!bFound)
     {
         SBPL_PRINTF("failed to find a solution\n");
