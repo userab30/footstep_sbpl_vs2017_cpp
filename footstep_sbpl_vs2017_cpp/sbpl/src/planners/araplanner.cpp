@@ -257,10 +257,10 @@ void ARAPlanner::UpdatePreds(ARAState* state, ARASearchStateSpace_t* pSearchStat
 
 	//从目标goal处开始往前pred搜索，PredIDV为扩展的14个可选脚印, &CostV为14个相应脚印的cost
 
-    environment_->GetPreds(state->MDPstate->StateID, &PredIDV, &CostV);
+    environment_->GetPreds(state->MDPstate->StateID, &PredIDV, &CostV); //48.2%
     //iterate through predecessors of s
     for (int pind = 0; pind < (int)PredIDV.size(); pind++) {
-        CMDPSTATE* PredMDPState = GetState(PredIDV[pind], pSearchStateSpace);
+        CMDPSTATE* PredMDPState = GetState(PredIDV[pind], pSearchStateSpace); //12.69%
         predstate = (ARAState*)(PredMDPState->PlannerSpecificData);
         if (predstate->callnumberaccessed != pSearchStateSpace->callnumber) {
             ReInitializeSearchStateInfo(predstate, pSearchStateSpace);
@@ -277,9 +277,9 @@ void ARAPlanner::UpdatePreds(ARAState* state, ARASearchStateSpace_t* pSearchStat
                 key.key[0] = predstate->g + (int)(pSearchStateSpace->eps * predstate->h);
                 //key.key[1] = predstate->h;
                 if (predstate->heapindex != 0)
-                    pSearchStateSpace->heap->updateheap(predstate, key);
+                    pSearchStateSpace->heap->updateheap(predstate, key); //1.38%
                 else
-                    pSearchStateSpace->heap->insertheap(predstate, key);
+                    pSearchStateSpace->heap->insertheap(predstate, key); //1.13%
             }
             //take care of incons list
             else if (predstate->listelem[ARA_INCONS_LIST_ID] == NULL) {
@@ -412,7 +412,7 @@ int ARAPlanner::ImprovePath(ARASearchStateSpace_t* pSearchStateSpace, double Max
 #endif
 
         if (bforwardsearch == false)
-            UpdatePreds(state, pSearchStateSpace);
+            UpdatePreds(state, pSearchStateSpace); //71.74%
         else
             UpdateSuccs(state, pSearchStateSpace);
 #if DEBUG
@@ -970,7 +970,7 @@ bool ARAPlanner::Search(ARASearchStateSpace_t* pSearchStateSpace, vector<int>& p
             Reevaluatefvals(pSearchStateSpace);
 
         //improve or compute path
-        if (ImprovePath(pSearchStateSpace, MaxNumofSecs) == 1) {
+        if (ImprovePath(pSearchStateSpace, MaxNumofSecs) == 1) {  //81.52%
             pSearchStateSpace->eps_satisfied = pSearchStateSpace->eps;
         }
 
@@ -1034,8 +1034,8 @@ bool ARAPlanner::Search(ARASearchStateSpace_t* pSearchStateSpace, vector<int>& p
         ret = true;
     }
 
-    SBPL_PRINTF("total expands this call = %d, planning time = %.3f secs, solution cost=%d\n",
-                searchexpands, (clock() - TimeStarted) / ((double)CLOCKS_PER_SEC), solcost);
+    SBPL_PRINTF("The size of heap =%d, total expands this call = %d, planning time = %.3f secs, solution cost=%d\n",
+		pSearchStateSpace->heap->currentsize, searchexpands, (clock() - TimeStarted) / ((double)CLOCKS_PER_SEC), solcost);
     final_eps_planning_time = (clock() - TimeStarted) / ((double)CLOCKS_PER_SEC);
     final_eps = pSearchStateSpace->eps_satisfied;
     //SBPL_FPRINTF(fStat, "%d %d\n", searchexpands, solcost);

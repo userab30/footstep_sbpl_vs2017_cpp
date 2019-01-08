@@ -803,25 +803,25 @@ namespace footstep_planner
 		// make sure goal state transitions are consistent with
 		// GetSuccs(some_state, goal_state) where goal_state is reachable by an
 		// arbitrary step from some_state
-		if (ivForwardSearch)
-		{
-			if (TargetStateID == ivIdGoalFootLeft || TargetStateID == ivIdGoalFootRight)
-			{
-				const PlanningState* s;
-				int cost;
-				std::vector<int>::const_iterator state_id_iter;
-				for (state_id_iter = ivStateArea.begin();
-					state_id_iter != ivStateArea.end();
-					++state_id_iter)
-				{
-					s = ivStateId2State[*state_id_iter];
-					cost = stepCost(*current, *s);
-					PredIDV->push_back(s->getId());
-					CostV->push_back(cost);
-				}
-				return;
-			}
-		}
+		//if (ivForwardSearch)
+		//{
+		//	if (TargetStateID == ivIdGoalFootLeft || TargetStateID == ivIdGoalFootRight)
+		//	{
+		//		const PlanningState* s;
+		//		int cost;
+		//		std::vector<int>::const_iterator state_id_iter;
+		//		for (state_id_iter = ivStateArea.begin();
+		//			state_id_iter != ivStateArea.end();
+		//			++state_id_iter)
+		//		{
+		//			s = ivStateId2State[*state_id_iter];
+		//			cost = stepCost(*current, *s);
+		//			PredIDV->push_back(s->getId());
+		//			CostV->push_back(cost);
+		//		}
+		//		return;
+		//	}
+		//}
 		
 		ivExpandedStates.insert(std::pair<int, int>(current->getX(), current->getY()));
 		++ivNumExpandedStates;
@@ -841,7 +841,7 @@ namespace footstep_planner
 		//	return;
 		//}
 
-		PredIDV->reserve(ivFootstepSet.size());
+		PredIDV->reserve(ivFootstepSet.size()); //1.84%
 		CostV->reserve(ivFootstepSet.size());
 		std::vector<Footstep>::const_iterator footstep_set_iter;
 		for (footstep_set_iter = ivFootstepSet.begin();
@@ -849,16 +849,16 @@ namespace footstep_planner
 			++footstep_set_iter)
 		{
 			const PlanningState predecessor =
-				footstep_set_iter->reverseMeOnThisState(*current);
-			if (occupied(predecessor))
+				footstep_set_iter->reverseMeOnThisState(*current); //4.36%
+			if (occupied(predecessor)) //5.07%
 				continue;
 
-			const PlanningState* predecessor_hash = createHashEntryIfNotExists(
+			const PlanningState* predecessor_hash = createHashEntryIfNotExists( //17.70%
 				predecessor);
 
-			int cost = stepCost(*current, *predecessor_hash);
-			PredIDV->push_back(predecessor_hash->getId());
-			CostV->push_back(cost);
+			int cost = stepCost(*current, *predecessor_hash); //1.19%
+			PredIDV->push_back(predecessor_hash->getId()); //4.68%
+			CostV->push_back(cost); //4.55%
 		}
 	}
 
